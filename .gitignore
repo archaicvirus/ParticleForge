@@ -1,1 +1,4 @@
 start.bat
+classes/keycodes.txt
+classes/open_simplex_noise.lua
+classes/vec3D.lua
