@@ -3,13 +3,5 @@ classes/keycodes.txt
 classes/open_simplex_noise.lua
 classes/vec3D.lua
 screenshots
-.local/0d1474b1c68867e860765cbc3166cdab
-.local/2e6e0324d337d199476018794fc3559a
-.local/7c4c29ed0d10b7676cc6387451e3e3cc
-.local/30b2952013103587c3fe783b38dc8bbd
-.local/afa1ab457f9ba8481aeffc5305ae0c0d
-.local/cd85d97063ca3c142088519f03885727
-.local/be42d6f/config.tic
-.local/be42d6f/default_lua.tic
-.local/be42d6f/options.dat
+.local/
 gibs_demo_01.gif
