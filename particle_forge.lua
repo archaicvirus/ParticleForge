@@ -9,6 +9,7 @@
 floor, ceil, rnd, abs, rad, deg, cos, sin, min, max =  math.floor, math.ceil, math.random, math.abs, math.rad, math.deg, math.cos, math.sin, math.min, math.max
 require("classes/vec2D")
 require("classes/gui")
+CURRENT_EMITTER_PREVIEW = 13
 grid = vec2(14 * 8, 9)
 GRID_WIDTH = 240 - grid.x
 GRID_HEIGHT = 136 - grid.y
@@ -83,7 +84,6 @@ CURRENT_EMITTER_SETTING = 1
 CURRENT_PARTICLE = 1
 CURRENT_PARTICLE_SETTING_PAGE = 1
 CURRENT_PARTICLE_VALUE_EDIT = {}
-CURRENT_EMITTER_PREVIEW = 1
 PARTICLE_WIDGETS_PER_PAGE = 13
 EMITTER_WIDGETS_PER_PAGE = 10
 PARTICLE_SETTTING_WIDGET_HEIGHT = 9
@@ -251,7 +251,7 @@ KEYS = {
 	[45] = {'<', ','},
 	[46] = {'>', '.'},
 	[47] = {'?', '/'},
-	[48] = {' '}, --SPACE
+	--[48] = {' '}, --SPACE
 	--[49] = {'    '}, --TAB
 	--[50] = {'\n'}, --ENTER KEY
 	[79] = {'0'},
@@ -271,6 +271,23 @@ KEYS = {
 	[93] = {''}, -- NUMPAD ENTER
 	[94] = {'.'},
 }
+
+palettes = {
+	bg = '1d1d20ba5d1d856d2844690c203810185050346d912424441414147530619d557d59300c611c10242c2c5d5d5d999595',
+	fg = '1d1d20f9801dfed83d80c71f5e7c16169c9c4c7dca20387d141414c74ebdf38baa8d4820b02e26474f528d8d89d6d6d2',
+}
+
+function loadPalette(palette, bank)
+	for i=0,15 do
+		local r=tonumber(string.sub(palette,i*6+1,i*6+2),16)
+		local g=tonumber(string.sub(palette,i*6+3,i*6+4),16)
+		local b=tonumber(string.sub(palette,i*6+5,i*6+6),16)
+		poke(0x3FC0+(i*3)+0,r)
+		poke(0x3FC0+(i*3)+1,g)
+		poke(0x3FC0+(i*3)+2,b)
+	end
+end
+
 
 function load_settings()
 	local settings = pmem(0)
@@ -315,10 +332,14 @@ function set_bit(num, bit, value)
 end
 
 
-
 function BOOT()
-	load_settings()
+	--load_settings()
 end
+vbank(0)
+loadPalette(palettes.bg)
+cls()
+vbank(1)
+loadPalette(palettes.fg)
 load_settings()
 
 function deep_copy(obj, seen)
@@ -2292,15 +2313,31 @@ end
 -- 002:0aa09900aaaa9990aaa999900aaa990000a99000000a00000000000000000000
 -- 003:0880088088c88c888cccccc88cccccc88cccccc808cccc80008cc80000088000
 -- 004:000000000cc0cc00ccccccc0ccccccc00ccccc0000ccc000000c000000000000
+-- 005:000000000000000001111cc001111cc001111cc0000000000000000000000000
+-- 006:00000000000000000000000000000000bbbbbbcc000000000000000000000000
 -- 016:00b0000000cb00000bccc0000cccc000bccccc00ccbccc00bccccc000bccc000
 -- 017:0cc0cc00ccccccc0ccccccc00ccccc0000ccc000000c00000000000000000000
 -- 018:003344000300004030f000043000000430000004300000040300004000333400
 -- 019:00ccbb000c0000b0c0b0000bc000000bc000000bc000000b0c0000b000ccbb00
 -- 020:0888888888cc8cc88ccccccc8ccccccc88ccccc8088ccc880088c88000088800
--- 021:0000000080000000800000008000000080000000000000000000000000000000
+-- 021:bbbbbbcc00000000000000000000000000000000000000000000000000000000
 -- 032:0088088008cb8bc88cbcbbbb8ccbcbbb08ccbcb8008ccb800008c80000008000
 -- 033:00cbcb000cbcbbc0bccbbbbcccbcbbbccbcbbbbbbcccbcbb0bcbccb000bccb00
 -- 034:00bcbc000bccccb0cbbccccbbbcbcccbbcbccccccbbbcbcc0cbcbbc000cbbc00
+-- 035:000000000eccccc00eccccc00eccccc000000000000000000000000000000000
+-- 036:00ffff000ffffff0fffffffffffffffeffffffeffffffefe0fffefe000fefe00
+-- 048:000000000000000000000fff0000ffff000fffff00ffffff0fffffff0fffffff
+-- 049:00000fff000ffffff0ffffffffffffffffffffffffffffffffffffffffffffff
+-- 050:ff000000ffff0000fffff000ffffff0fffffffffffffffffffffffffffffffff
+-- 051:000000000000000000000000ffff0000fffff000ffffff00fffffff0fffefff0
+-- 054:11c0000000000000000000000000000000000000000000000000000000000000
+-- 064:0fffffff0fffffff00ffffff00fffefe0000efef000000000000000000000000
+-- 065:ffffffffffffffffffffffffffffffffff00ffff00000fff0000000000000000
+-- 066:fffffffffffffffffffffffefffffffffffe00ffeee0000f0000000000000000
+-- 067:fffffef0ffeffff0fffeffe0fefffe00ffffe000eeee00000000000000000000
+-- 096:00f0f000000f0000000f000000cec00000beb00000bcc00000ccb00000000000
+-- 097:0000000000fff0000fffff000f8f8f000fffff0000eff00000fef00000000000
+-- 098:000ee000000ff00000feef000f0ff0f000feef000f0ff0f000f00f0000000000
 -- 224:4040000024200000424000002020000000000000000000000000000000000000
 -- 225:444000002c200000020000000000000000000000000000000000000000000000
 -- 226:000000000044000004cc400002cc200000220000000000000000000000000000
@@ -2338,7 +2375,7 @@ end
 -- </TRACKS>
 
 -- <PALETTE>
--- 000:1d1d20ba5d1db6892844690c203810185050346d912424441414147530619d557d59300c611c10242c2c5d5d5d999595
+-- 000:1d1d20f9801dfed83d80c71f5e7c16169c9c4c7dca20387d141414c74ebdf38baa8d4820b02e26474f618d8d89d6d6d2
 -- 001:1d1d20f9801dfed83d80c71f5e7c16169c9c4c7dca20387d141414c74ebdf38baa8d4820b02e26474f618d8d89d6d6d2
 -- </PALETTE>
 

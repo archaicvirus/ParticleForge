@@ -36,6 +36,70 @@ function default_click(self)
 end
 
 
+--DEFAULT UPDATE FOR MOST PARTICLES
+function particle_default_update(self, dt)
+	if self.age < self.life then
+		self.age = self.age + dt
+		self.time_cycle = self.time_cycle + dt
+		if not self.freeze then
+			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+			if abs(self.rotation_rate) > 0 then
+				self.rotation = self.rotation + (self.rotation_rate/2 * dt)
+			end
+			if abs(self.angular_velocity) > 0 then
+				local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
+				--trace('rotating: ' .. rotation_amount .. " degrees")
+				self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
+			end
+			if self.growth_rate > 0 and self.time_cycle >= self.growth_rate then
+				self.time_cycle = self.time_cycle - self.growth_rate
+				self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
+			end
+			if abs(self.gravity) > 0 then
+				self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
+			end
+		end
+	else
+		self:kill()
+	end
+
+	local position = self.pos + (self.origin == 1 and EMITTER_POSITION or self.initial_position)
+	local a, b = position - self.radius/2, position + self.radius/2
+	if not hovered(a, self.bounds) or not hovered(b, self.bounds) then
+		if self.collision == "Kill" then
+			self:kill()
+		elseif self.collision == "Bounce" then
+			if not self.freeze and abs(self.vel:length()) > 0.5 then
+				self.vel = -self.vel
+				self.vel = lerp(self.vel, 0, 0.75)
+				self.pos = self.pos + (self.vel)
+				self.rotation_rate = lerp(-self.rotation_rate, 0, 0.5)
+				self.rotation = lerp(self.rotation, 0, 0.5)
+			else
+				self.freeze = true
+				self.vel = vec2(0, 0)
+				self.rotation_rate = 0
+				self.rotation = 0
+			end
+			--self.age = self.age + 10
+		elseif self.collision == 'Stop' then
+			self.freeze = true
+			self.pos = self.pos + (-self.vel*0.2)
+			self.rotation_rate = 0
+			self.vel = vec2()
+			--self.age = self.age + 10
+		end
+
+		if self.age > self.life then
+			self:kill()
+			return
+		end
+	end
+
+
+end
+
+
 --GENERIC PARTICLE - USED WHEN CLICKING THE '+' BUTTON TO ADD NEW PARTICLE LAYER
 DEFAULT_NEW_PARTICLE = {sprite={id=0,w=1,h=1},vis=true,name='Default',1,1000,20,1,1,15,15,0,0,0,0,5,3.0,0,0.1,1,0,0.0,0,0,0,0,0,1,1,1.0,0,1.0}
 
@@ -79,7 +143,7 @@ PARTICLE_FUNCS = {
 
 			draw = function(self, dt)
 				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
-				circ(pos.x, pos.y, self.radius, self.color)
+				circ(pos.x, pos.y, abs(self.radius), self.color)
 			end,
 		},
 		['CircleB'] = {
@@ -89,7 +153,7 @@ PARTICLE_FUNCS = {
 
 			draw = function(self, dt)
 				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
-				circb(pos.x, pos.y, self.radius, self.color)
+				circb(pos.x, pos.y, abs(self.radius), self.color)
 			end,
 		},
 		['Rect'] = {
@@ -111,7 +175,7 @@ PARTICLE_FUNCS = {
 					tri(a.x, a.y, b.x, b.y, c.x, c.y, self.color)
 					tri(a.x, a.y, d.x, d.y, c.x, c.y, self.color)
 				else
-					rect(pos.x, pos.y, self.radius, self.radius, self.color)
+					rect(pos.x, pos.y, abs(self.radius), abs(self.radius), self.color)
 				end
 			end,
 		},
@@ -136,65 +200,108 @@ PARTICLE_FUNCS = {
 					line(c.x, c.y, d.x, d.y, self.color)
 					line(d.x, d.y, a.x, a.y, self.color)
 				else
-					rectb(pos.x, pos.y, self.radius, self.radius, self.color)
+					rectb(pos.x, pos.y, abs(self.radius), abs(self.radius), self.color)
 				end
 			end,
 		},
 		['Triangle'] = {
 			update = function(self, dt)
-				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				--local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				local pos = self.pos + self:get_origin()
 				local a = vec2(pos.x - (self.radius*2), pos.y)
 				local b = vec2(pos.x + (self.radius*2), pos.y)
 				local c = vec2(pos.x, pos.y - (self.radius*2))
-				if not self.freeze and abs(self.rotation_rate) > 0 then
-					self.rotation = self.rotation + (self.rotation_rate/2 * dt)
-				end
 				if abs(self.rotation) > 0 then
 					a = rotatePoint(pos, vec2(pos.x - (self.radius*2), pos.y), self.rotation)
 					b = rotatePoint(pos, vec2(pos.x + (self.radius*2), pos.y), self.rotation)
 					c = rotatePoint(pos, vec2(pos.x, pos.y - (self.radius*2)), self.rotation)
 				end
-				if self.age < self.life then
-					self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/1000))
+
+				--UPDATE POSITION, GRAVITY, SIZE AND ROTATIONS
+				if not self.freeze then
+					if abs(self.rotation_rate) > 0 then
+						self.rotation = self.rotation + (self.rotation_rate/2 * dt)
+					end
 					if abs(self.angular_velocity) > 0 then
-						local origin = self.origin == 1 and EMITTER_POSITION or self.initial_position
 						local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
 						--trace('rotating: ' .. rotation_amount .. " degrees")
 						self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
 					end
-					self.time_cycle = self.time_cycle + dt
-					self.age = self.age + dt
-					if self.growth_rate > 0 and self.radius < self.max_growth and self.time_cycle >= self.growth_rate then
+					if self.growth_rate > 0 and self.time_cycle >= self.growth_rate then
 						self.time_cycle = self.time_cycle - self.growth_rate
-						self.radius = clamp(self.radius + 0.1, 0, self.max_growth)
+						self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 					end
 					if self.gravity and not self.freeze then
 						self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
 					end
+					self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+				end
+
+				--UPDATE LIFESPAN
+				if self.age < self.life then
+					self.time_cycle = self.time_cycle + dt
+					self.age = self.age + dt
 				else
 					self:kill()
 				end
+
+				--PROCESS COLLISION
 				if not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds) then
-					if abs(self.vel:length()) < 0.75 then
-						--trace('freezing sprite')
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
+					if self.collision == "Kill" then
+						self:kill()
+					elseif self.collision == "Bounce" then
+						if not self.freeze and abs(self.vel:length()) > 0.5 then
+							self.vel = -self.vel
+							self.pos = self.pos + (self.vel)
+							self.vel = lerp(self.vel, 0, 0.75)
+							self.rotation_rate = -self.rotation_rate
+							self.rotation_rate = lerp(self.rotation_rate, 0, 0.5)
+							self.rotation = lerp(self.rotation, 0, 0.5)
+						else
+							self.freeze = true
+							self.vel = vec2(0, 0)
+							self.rotation_rate = 0
+							self.rotation = 0
+						end
+						--self.age = self.age + 10
+					elseif self.collision == 'Stop' and not self.freeze then
 						self.freeze = true
-						self.vel = vec2(0, 0)
+						self.pos = self.pos + (-self.vel*0.2)
 						self.rotation_rate = 0
-						self.rotation = 0
-					else
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
-						self.vel = lerp(self.vel, 0, 0.5)
-						--local last_rotation = self.rotation_rate
-						self.rotation_rate = -self.rotation_rate * 1.1
+						self.vel = vec2()
+						--self.age = self.age + 10
+					end
+
+					if self.age > self.life then
+						self:kill()
+						return
 					end
 				end
+
+
+
+
+				-- 	if abs(self.vel:length()) < 0.75 then
+				-- 		--trace('freezing sprite')
+				-- 		self.vel = -self.vel
+				-- 		self.pos = self.pos + (self.vel)
+				-- 		self.freeze = true
+				-- 		self.vel = vec2(0, 0)
+				-- 		self.rotation_rate = 0
+				-- 		self.rotation = 0
+				-- 	else
+				-- 		self.vel = -self.vel
+				-- 		self.pos = self.pos + (self.vel)
+				-- 		self.vel = lerp(self.vel, 0, 0.5)
+				-- 		--local last_rotation = self.rotation_rate
+				-- 		self.rotation_rate = -self.rotation_rate * 1.1
+				-- 	end
+				-- end
 			end,
 
 			draw = function(self, dt)
-				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				--local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				local pos = self.pos + self:get_origin()
 				local a = vec2(pos.x - (self.radius*2), pos.y)
 				local b = vec2(pos.x + (self.radius*2), pos.y)
 				local c = vec2(pos.x, pos.y - (self.radius*2))
@@ -208,38 +315,43 @@ PARTICLE_FUNCS = {
 		},
 		['TriangleB'] = {
 			update = function(self, dt)
-				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				local pos = self.pos + self:get_origin()
 				local a = vec2(pos.x - (self.radius*2), pos.y)
 				local b = vec2(pos.x + (self.radius*2), pos.y)
 				local c = vec2(pos.x, pos.y - (self.radius*2))
-				if not self.freeze and abs(self.rotation_rate) > 0 then
-					self.rotation = self.rotation + (self.rotation_rate/2 * dt)
-				end
 				if abs(self.rotation) > 0 then
 					a = rotatePoint(pos, vec2(pos.x - (self.radius*2), pos.y), self.rotation)
 					b = rotatePoint(pos, vec2(pos.x + (self.radius*2), pos.y), self.rotation)
 					c = rotatePoint(pos, vec2(pos.x, pos.y - (self.radius*2)), self.rotation)
 				end
-				if self.age < self.life then
-					self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/1000))
+
+				if not self.freeze then
+					if abs(self.rotation_rate) > 0 then
+						self.rotation = self.rotation + (self.rotation_rate/2 * dt)
+					end
 					if abs(self.angular_velocity) > 0 then
 						local origin = self.origin == 1 and EMITTER_POSITION or self.initial_position
 						local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
 						--trace('rotating: ' .. rotation_amount .. " degrees")
 						self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
 					end
-					self.time_cycle = self.time_cycle + dt
-					self.age = self.age + dt
-					if self.growth_rate > 0 and self.radius < self.max_growth and self.time_cycle >= self.growth_rate then
+					if self.growth_rate > 0 and self.time_cycle >= self.growth_rate then
 						self.time_cycle = self.time_cycle - self.growth_rate
-						self.radius = clamp(self.radius + 0.1, 0, self.max_growth)
+						self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 					end
 					if self.gravity and not self.freeze then
 						self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
 					end
+					self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+				end
+
+				if self.age < self.life then
+					self.time_cycle = self.time_cycle + dt
+					self.age = self.age + dt
 				else
 					self:kill()
 				end
+
 				if not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds) then
 					if abs(self.vel:length()) < 0.75 then
 						--trace('freezing sprite')
@@ -260,7 +372,7 @@ PARTICLE_FUNCS = {
 			end,
 
 			draw = function(self, dt)
-				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
+				local pos = self.pos + self:get_origin()
 				local a = vec2(pos.x - (self.radius*2), pos.y)
 				local b = vec2(pos.x + (self.radius*2), pos.y)
 				local c = vec2(pos.x, pos.y - (self.radius*2))
@@ -305,9 +417,9 @@ PARTICLE_FUNCS = {
 						self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
 					end
 					if not self.freeze and self.growth_rate > 0 then
-						if self.radius < self.max_growth and self.time_cycle >= self.growth_rate then
+						if self.time_cycle >= self.growth_rate then
 							self.time_cycle = self.time_cycle - self.growth_rate
-							self.radius = clamp(self.radius + 0.1, self.initial_scale, self.max_growth)
+							self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 						end
 					end
 					if not self.freeze and abs(self.gravity) > 0 then
@@ -778,7 +890,15 @@ BASE_PARTICLE_SETTINGS = {
 		name = "Gravity Scale",
 		hover_text = 'Scalar for total gravity',
 		val = 1.0,
-		min = -10.0, max = 10, increment = 0.01, unit = 'float', get = default_get, set = default_set
+		min = -10.0,
+		max = 10,
+		increment = 0.01,
+		unit = 'float',
+		get = default_get,
+		set = default_set,
+		click = function(self)
+			default_click(self)
+		end,
 	},
 	angular_velocity = {
 		name = "Ang. Velocity",
@@ -1002,9 +1122,9 @@ function update_rect(self, dt)
 	if self.age < self.life then
 		self.time_cycle = self.time_cycle + dt
 		self.age = self.age + dt
-		if not self.freeze and self.growth_rate > 0 and self.radius < self.max_growth and self.time_cycle >= self.growth_rate then
+		if not self.freeze and self.growth_rate > 0 and self.time_cycle >= self.growth_rate then
 			self.time_cycle = self.time_cycle - self.growth_rate
-			self.radius = clamp(self.radius + 0.1, 0, self.max_growth)
+			self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 		end
 		if not self.freeze then
 			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
@@ -1097,68 +1217,4 @@ function new_active_particle(particle_system)
 	end
 
 	return particle_batch
-end
-
-
---DEFAULT UPDATE FOR MOST PARTICLES
-function particle_default_update(self, dt)
-	if self.age < self.life then
-		self.age = self.age + dt
-		self.time_cycle = self.time_cycle + dt
-		if not self.freeze then
-			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
-			if abs(self.rotation_rate) > 0 then
-				self.rotation = self.rotation + (self.rotation_rate/2 * dt)
-			end
-			if abs(self.angular_velocity) > 0 then
-				local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
-				--trace('rotating: ' .. rotation_amount .. " degrees")
-				self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
-			end
-			if self.growth_rate > 0 and self.radius < self.max_growth and self.time_cycle >= self.growth_rate then
-				self.time_cycle = self.time_cycle - self.growth_rate
-				self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
-			end
-			if abs(self.gravity) > 0 then
-				self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
-			end
-		end
-	else
-		self:kill()
-	end
-
-	local position = self.pos + (self.origin == 1 and EMITTER_POSITION or self.initial_position)
-	local a, b = position - self.radius/2, position + self.radius/2
-	if not hovered(a, self.bounds) or not hovered(b, self.bounds) then
-		if self.collision == "Kill" then
-			self:kill()
-		elseif self.collision == "Bounce" then
-			if not self.freeze and abs(self.vel:length()) > 0.5 then
-				self.vel = -self.vel
-				self.vel = lerp(self.vel, 0, 0.75)
-				self.pos = self.pos + (self.vel)
-				self.rotation_rate = lerp(-self.rotation_rate, 0, 0.5)
-				self.rotation = lerp(self.rotation, 0, 0.5)
-			else
-				self.freeze = true
-				self.vel = vec2(0, 0)
-				self.rotation_rate = 0
-				self.rotation = 0
-			end
-			--self.age = self.age + 10
-		elseif self.collision == 'Stop' then
-			self.freeze = true
-			self.pos = self.pos + (-self.vel*0.2)
-			self.rotation_rate = 0
-			self.vel = vec2()
-			--self.age = self.age + 10
-		end
-
-		if self.age > self.life then
-			self:kill()
-			return
-		end
-	end
-
-
 end
