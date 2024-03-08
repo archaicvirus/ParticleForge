@@ -658,7 +658,7 @@ end
 
 -- Function to generate a random float in the range [min, max]
 function rndf(min, max)
-	if min == 0 or max == 0 then return 0 end
+	if min == 0 and max == 0 then return 0 end
     -- Handle the case where min is greater than max
     if min > max then
         min, max = max, min
