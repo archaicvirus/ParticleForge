@@ -15,7 +15,7 @@ Designed for use with the PRO version of TIC-80
 - Load previously exported emitters (after adding the exported table to particle_defs.lua)
 - Uses vbank 0 and 1 for up to 31 color particles
 - Re-arrange particle draw order
-- Clone single particles or whole systems
+- Clone any particle channel
 - Some settings have alternate functions, to view them, hover and hold SHIFT
 
 ![intro_screen](https://github.com/archaicvirus/ParticleForge/assets/25288625/d91639fd-2058-4b65-981a-11127cc8a03f)
