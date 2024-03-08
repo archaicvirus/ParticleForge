@@ -250,6 +250,13 @@ PARTICLE_FUNCS = {
 					if self.collision == "Kill" then
 						self:kill()
 					elseif self.collision == "Bounce" then
+						for i = 1, 10 do
+							if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+								self.pos = self.pos - ((self.vel * self.velocity_scale) * (dt/100))/4
+							else
+								break
+							end
+						end
 						if not self.freeze and abs(self.vel:length()) > 0.5 then
 							self.vel = -self.vel
 							self.pos = self.pos + (self.vel)
@@ -352,21 +359,43 @@ PARTICLE_FUNCS = {
 					self:kill()
 				end
 
-				if not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds) then
-					if abs(self.vel:length()) < 0.75 then
-						--trace('freezing sprite')
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
+				--PROCESS COLLISION
+				if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+					if self.collision == "Kill" then
+						self:kill()
+					elseif self.collision == "Bounce" then
+						for i = 1, 10 do
+							if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+								self.pos = self.pos - ((self.vel * self.velocity_scale) * (dt/100))/4
+							else
+								break
+							end
+						end
+						if not self.freeze and abs(self.vel:length()) > 0.5 then
+							self.vel = -self.vel
+							self.pos = self.pos + (self.vel)
+							self.vel = lerp(self.vel, 0, 0.75)
+							self.rotation_rate = -self.rotation_rate
+							self.rotation_rate = lerp(self.rotation_rate, 0, 0.5)
+							self.rotation = lerp(self.rotation, 0, 0.5)
+						else
+							self.freeze = true
+							self.vel = vec2(0, 0)
+							self.rotation_rate = 0
+							self.rotation = 0
+						end
+						--self.age = self.age + 10
+					elseif self.collision == 'Stop' and not self.freeze then
 						self.freeze = true
-						self.vel = vec2(0, 0)
+						self.pos = self.pos + (-self.vel*0.2)
 						self.rotation_rate = 0
-						self.rotation = 0
-					else
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
-						self.vel = lerp(self.vel, 0, 0.5)
-						--local last_rotation = self.rotation_rate
-						self.rotation_rate = -self.rotation_rate * 1.1
+						self.vel = vec2()
+						--self.age = self.age + 10
+					end
+
+					if self.age > self.life then
+						self:kill()
+						return
 					end
 				end
 			end,

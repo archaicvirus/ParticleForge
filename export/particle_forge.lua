@@ -6,12 +6,13 @@
 -- version: 1.0
 -- script:  lua
 
-floor, ceil, rnd, abs, rad, deg, cos, sin, min, max =  math.floor, math.ceil, math.random, math.abs, math.rad, math.deg, math.cos, math.sin, math.min, math.max
+floor, ceil, rnd, abs, rad, deg, cos, sin, min, max = math.floor, math.ceil, math.random, math.abs, math.rad, math.deg,
+	math.cos, math.sin, math.min, math.max
 vec2 = {}
 vec2_mt = {}
 vec2_mt.__index = vec2_mt
 
-function vec2_mt:__add( v )
+function vec2_mt:__add(v)
 	if type(v) == 'table' then
 		return vec2(self.x + v.x, self.y + v.y)
 	else
@@ -19,7 +20,7 @@ function vec2_mt:__add( v )
 	end
 end
 
-function vec2_mt:__sub( v )
+function vec2_mt:__sub(v)
 	if type(v) == 'table' then
 		return vec2(self.x - v.x, self.y - v.y)
 	else
@@ -27,23 +28,29 @@ function vec2_mt:__sub( v )
 	end
 end
 
-function vec2_mt:__mul( v )
+function vec2_mt:__mul(v)
 	if type(v) == "table"
-		then return vec2(self.x * v.x, self.y * v.y)
-		else return vec2(self.x * v, self.y * v) end
+	then
+		return vec2(self.x * v.x, self.y * v.y)
+	else
+		return vec2(self.x * v, self.y * v)
+	end
 end
 
-function vec2_mt:__div( v )
+function vec2_mt:__div(v)
 	if type(v) == "table"
-	then return vec2(self.x / v.x, self.y / v.y)
-	else return vec2(self.x / v, self.y / v) end
+	then
+		return vec2(self.x / v.x, self.y / v.y)
+	else
+		return vec2(self.x / v, self.y / v)
+	end
 end
 
 function vec2_mt:__unm()
 	return vec2(-self.x, -self.y)
 end
 
-function vec2_mt:dot( v )
+function vec2_mt:dot(v)
 	return self.x * v.x + self.y * v.y
 end
 
@@ -76,14 +83,20 @@ end
 
 function vec2_mt:min(v)
 	if type(v) == "table"
-	then return vec2(math.min(self.x, v.x), math.min(self.y, v.y))
-	else return math.min(self.x, self.y) end
+	then
+		return vec2(math.min(self.x, v.x), math.min(self.y, v.y))
+	else
+		return math.min(self.x, self.y)
+	end
 end
 
 function vec2_mt:max(v)
 	if type(v) == "table"
-	then return vec2(math.max(self.x, v.x), math.max(self.y, v.y))
-	else return math.max(self.x, self.y) end
+	then
+		return vec2(math.max(self.x, v.x), math.max(self.y, v.y))
+	else
+		return math.max(self.x, self.y)
+	end
 end
 
 function vec2_mt:abs()
@@ -106,7 +119,7 @@ function vec2_mt:__eq(b)
 	return type(b) == 'table' and self.x == b.x and self.y == b.y
 end
 
-setmetatable(vec2, {__call = function(V, x, y ) return setmetatable({x = x or 0, y = y or x or 0}, vec2_mt) end})
+setmetatable(vec2, { __call = function(V, x, y) return setmetatable({ x = x or 0, y = y or x or 0 }, vec2_mt) end })
 
 CRAFT_ANCHOR_ID = 435
 CLOSE_ID = 437
@@ -136,15 +149,14 @@ CURSOR_REPEAT_RATE = 5
 
 
 ui = {
-  alerts = {}
+	alerts = {}
 }
 
 
 function box(x, y, w, h, bg, fg)
-  rectb(x, y, w, h, fg)
-  rect(x + 1, y + 1, w - 2, h - 2, bg)
+	rectb(x, y, w, h, fg)
+	rect(x + 1, y + 1, w - 2, h - 2, bg)
 end
-
 
 function ui.draw_panel(x, y, w, h, bg, fg, label, shadow, id, fill)
 	fill = fill or 1
@@ -166,154 +178,150 @@ function ui.draw_panel(x, y, w, h, bg, fg, label, shadow, id, fill)
 		sspr(id or UI_CORNER, x + w - 8, y + h - 8, 0, 1, 3)
 		sspr(id or UI_CORNER, x, y + h - 8, 0, 1, 2)
 		pal()
-		rect(x, y + 6, w, 3, fg) -- header lower-fill
+		rect(x, y + 6, w, 3, fg)         -- header lower-fill
 		rect(x + 2, y + h - 3, w - 4, 1, fg) -- bottom footer fill
-		rect(x + 6, y + 2, w - 12, 4, fg)--header fill
+		rect(x + 6, y + 2, w - 12, 4, fg) --header fill
 		if fill then
 			rect(x + 2, y + 9, w - 4, h - 12, bg) -- background fill
 		end
 		if type(label) == 'table' then
-			prints(label.text, x + w/2 - width/2, y + 2, label.bg, label.fg) -- header text
+			prints(label.text, x + w / 2 - width / 2, y + 2, label.bg, label.fg) -- header text
 		else
-			prints(label, x + w/2 - width/2, y + 2, 0, 4) -- header text
+			prints(label, x + w / 2 - width / 2, y + 2, 0, 4)       -- header text
 		end
 	else
 		pal(1, fg)
-		sspr(id or UI_CORNER, x + w - 8, y + h - 8, {0, 8}, 1, 3)
-		sspr(id or UI_CORNER, x, y + h - 8, {0, 8}, 1, 2)
-		sspr(id or UI_CORNER, x, y, {0, 8})
-		sspr(id or UI_CORNER, x + w - 8, y, {0, 8}, 1, 1)
+		sspr(id or UI_CORNER, x + w - 8, y + h - 8, { 0, 8 }, 1, 3)
+		sspr(id or UI_CORNER, x, y + h - 8, { 0, 8 }, 1, 2)
+		sspr(id or UI_CORNER, x, y, { 0, 8 })
+		sspr(id or UI_CORNER, x + w - 8, y, { 0, 8 }, 1, 1)
 		pal()
 	end
-	rect(x + 6, y, w - 12, 2, fg) -- top border
-	rect(x, y + 6, 2, h - 12, fg) -- left border
-	rect(x + w - 2, y + 6, 2, h - 12, fg) -- right border
-	rect(x + 6, y + h - 2, w - 12, 2, fg) -- bottom border
+	rect(x + 6, y, w - 12, 2, fg)                      -- top border
+	rect(x, y + 6, 2, h - 12, fg)                      -- left border
+	rect(x + w - 2, y + 6, 2, h - 12, fg)              -- right border
+	rect(x + 6, y + h - 2, w - 12, 2, fg)              -- bottom border
 	if shadow then
-		line(x + w, y + 2, x + w - 2, y, shadow) -- shadow
-		line(x + 4, y + h, x + w - 3, y + h, shadow) -- shadow
-		line(x + w - 2, y + h - 1, x + w, y + h - 3, shadow)-- shadow
-		line(x + w, y + 3, x + w, y + h - 4, shadow)-- shadow
+		line(x + w, y + 2, x + w - 2, y, shadow)       -- shadow
+		line(x + 4, y + h, x + w - 3, y + h, shadow)   -- shadow
+		line(x + w - 2, y + h - 1, x + w, y + h - 3, shadow) -- shadow
+		line(x + w, y + 3, x + w, y + h - 4, shadow)   -- shadow
 	end
 	--sspr(CLOSE_ID, x + w - 9, y + 2, 0) -- close button
 end
 
-
 function ui.draw_grid(x, y, rows, cols, bg, fg, size, border, rounded)
-  rounded = true
-  border = true
-  size = size or 9
-  if border then rectb(x,y,cols*size+1,rows*size+1,fg) end
-  rect(x + 1, y + 1, (cols * size) - 1, (rows * size)-1, bg)
-  for i = 1, cols - 1 do
-    local x1 = x + i*size
-    line(x1, y + 1, x1, y + (rows*size), fg)
-  end
-  for i = 1, rows - 1 do
-    local y1 = y + i*size
-    line(x + 1, y1, x + (cols*size) - 1, y1, fg)
-  end
-  if rounded then
-    for i = 0, rows - 1 do
-      for j = 0, cols  - 1 do
-        local xx, yy = x + 1 + j*size, y + 1 + i*size
-        --rect(xx,yy,size-1,size-1,3)
-        pix(xx, yy, fg)
-        pix(xx + size - 2, yy, fg)
-        pix(xx + size - 2, yy + size - 2, fg)
-        pix(xx, yy + size - 2, fg)
-      end
-    end
-  end
+	rounded = true
+	border = true
+	size = size or 9
+	if border then rectb(x, y, cols * size + 1, rows * size + 1, fg) end
+	rect(x + 1, y + 1, (cols * size) - 1, (rows * size) - 1, bg)
+	for i = 1, cols - 1 do
+		local x1 = x + i * size
+		line(x1, y + 1, x1, y + (rows * size), fg)
+	end
+	for i = 1, rows - 1 do
+		local y1 = y + i * size
+		line(x + 1, y1, x + (cols * size) - 1, y1, fg)
+	end
+	if rounded then
+		for i = 0, rows - 1 do
+			for j = 0, cols - 1 do
+				local xx, yy = x + 1 + j * size, y + 1 + i * size
+				--rect(xx,yy,size-1,size-1,3)
+				pix(xx, yy, fg)
+				pix(xx + size - 2, yy, fg)
+				pix(xx + size - 2, yy + size - 2, fg)
+				pix(xx, yy + size - 2, fg)
+			end
+		end
+	end
 end
-
 
 function text_wrap(text, width, break_word)
-  local wrapped_lines = {}
-  local function add_line(line)
-    table.insert(wrapped_lines, line)
-  end
-  local function measure(str)
-      return text_width(str)
-  end
-  local function add_word(word, line)
-    if measure(line .. " " .. word) > width then
-      add_line(line)
-      return word
-    else
-      if line ~= "" then line = line .. " " end
-      return line .. word
-    end
-  end
-  local line = ""
-  for word in text:gmatch("%S+") do
-    if not break_word and measure(word) > width then
-      for c in word:gmatch(".") do
-        if measure(line .. c) > width then
-          add_line(line)
-          line = c
-        else
-          line = line .. c
-        end
-      end
-    else
-      line = add_word(word, line)
-    end
-  end
-  if line ~= "" then add_line(line) end
-  return wrapped_lines
+	local wrapped_lines = {}
+	local function add_line(line)
+		table.insert(wrapped_lines, line)
+	end
+	local function measure(str)
+		return text_width(str)
+	end
+	local function add_word(word, line)
+		if measure(line .. " " .. word) > width then
+			add_line(line)
+			return word
+		else
+			if line ~= "" then line = line .. " " end
+			return line .. word
+		end
+	end
+	local line = ""
+	for word in text:gmatch("%S+") do
+		if not break_word and measure(word) > width then
+			for c in word:gmatch(".") do
+				if measure(line .. c) > width then
+					add_line(line)
+					line = c
+				else
+					line = line .. c
+				end
+			end
+		else
+			line = add_word(word, line)
+		end
+	end
+	if line ~= "" then add_line(line) end
+	return wrapped_lines
 end
-
 
 function ui.progress_bar(progress, x, y, w, h, bg, fg, fill, option)
-  --Options: 
-  --0 - rounded/fancy
-  --1 - square with border
-  --2 - square no border
-  local prog_width = min(w-2, ceil((w-2)*progress))
-  if option == 0 then
-    pal({1, fg, 4, bg})
-    rect(x + 1, y + 1, w - 2, 4, bg)
-    rect(x + 1, y + 1, prog_width, 4, fill)
-    sspr(UI_PROG_ID, x, y, 0)
-    sspr(UI_PROG_ID, x + w - 8, y, 0, 1, 1)
-    line(x + 4, y, x + w - 4, y, fg)
-    line(x + 4, y + 5, x + w - 4, y + 5, fg)
-    pal()
-  elseif option == 1 then
-    rectb(x, y, w, h, fg)
-    rect(x + 1, y + 1, progress * (w-2), h - 2, fill)
-    pix(x + 1, y + 1, fg)
-    pix(x + 1, y + h - 2, fg)
-    pix(x + w - 2, y + 1, fg)
-    pix(x + w - 2, y + h - 2, fg)
-    pix(x, y, bg)
-    pix(x, y + h - 1, bg)
-    pix(x + w - 1, y, bg)
-    pix(x + w - 1, y + h - 1, bg)
-  elseif option == 2 then
-    rectb(x, y+1, w, h-2, fg)
-    rectb(x+1, y, w-2, h, fg)
-    rect(x + 1, y + 1, w-2, h - 2, bg)
-    rect(x + 1, y + 1, progress * (w-2), h - 2, fill)
-    pix(x + 1, y + 1, fg)
-    pix(x + 1, y + h - 2, fg)
-    pix(x + w - 2, y + 1, fg)
-    pix(x + w - 2, y + h - 2, fg)
-  end
+	--Options:
+	--0 - rounded/fancy
+	--1 - square with border
+	--2 - square no border
+	local prog_width = min(w - 2, ceil((w - 2) * progress))
+	if option == 0 then
+		pal({ 1, fg, 4, bg })
+		rect(x + 1, y + 1, w - 2, 4, bg)
+		rect(x + 1, y + 1, prog_width, 4, fill)
+		sspr(UI_PROG_ID, x, y, 0)
+		sspr(UI_PROG_ID, x + w - 8, y, 0, 1, 1)
+		line(x + 4, y, x + w - 4, y, fg)
+		line(x + 4, y + 5, x + w - 4, y + 5, fg)
+		pal()
+	elseif option == 1 then
+		rectb(x, y, w, h, fg)
+		rect(x + 1, y + 1, progress * (w - 2), h - 2, fill)
+		pix(x + 1, y + 1, fg)
+		pix(x + 1, y + h - 2, fg)
+		pix(x + w - 2, y + 1, fg)
+		pix(x + w - 2, y + h - 2, fg)
+		pix(x, y, bg)
+		pix(x, y + h - 1, bg)
+		pix(x + w - 1, y, bg)
+		pix(x + w - 1, y + h - 1, bg)
+	elseif option == 2 then
+		rectb(x, y + 1, w, h - 2, fg)
+		rectb(x + 1, y, w - 2, h, fg)
+		rect(x + 1, y + 1, w - 2, h - 2, bg)
+		rect(x + 1, y + 1, progress * (w - 2), h - 2, fill)
+		pix(x + 1, y + 1, fg)
+		pix(x + 1, y + h - 2, fg)
+		pix(x + w - 2, y + 1, fg)
+		pix(x + w - 2, y + h - 2, fg)
+	end
 end
-
 
 function ui.check_input(c)
-  local x, y, l, m, r, sx, sy, lx, ly, ll, lm, lr, lsx, lsy = c.x, c.y, c.l, c.m, c.r, c.sx, c.sy, c.lx, c.ly, c.ll, c.lm, c.lr, c.lsx, c.lsy
-  for k, v in pairs(self.windows) do
-    if v.vis and v:is_hovered(x, y) then
-      return true
-    end
-  end
-  return false
+	local x, y, l, m, r, sx, sy, lx, ly, ll, lm, lr, lsx, lsy = c.x, c.y, c.l, c.m, c.r, c.sx, c.sy, c.lx, c.ly, c.ll,
+		c.lm, c.lr, c.lsx, c.lsy
+	for k, v in pairs(self.windows) do
+		if v.vis and v:is_hovered(x, y) then
+			return true
+		end
+	end
+	return false
 end
-
 
 function ui.draw_button(x, y, flip, id, color, shadow_color, hover_color, hover_func, size, disabled, rot)
 	rot = rot or 0
@@ -321,19 +329,21 @@ function ui.draw_button(x, y, flip, id, color, shadow_color, hover_color, hover_
 	disabled = disabled or false
 	local hov, _mouse, _box, ck, p
 	if size then
-		_mouse, _box, ck, p = {x = cursor.x, y = cursor.y}, {x = size.x + x, y = size.y + y, w = size.w, h = size.h}, 0, {4, color, 2, shadow_color, 12, color}
+		_mouse, _box, ck, p = { x = cursor.x, y = cursor.y }, { x = size.x + x, y = size.y + y, w = size.w, h = size.h },
+			0, { 4, color, 2, shadow_color, 12, color }
 		hov = hovered(_mouse, _box)
 	else
-		_mouse, _box, ck, p = {x = cursor.x, y = cursor.y}, {x = x, y = y, w = 8, h = 8}, 0, {4, color, 2, shadow_color, 12, color}
+		_mouse, _box, ck, p = { x = cursor.x, y = cursor.y }, { x = x, y = y, w = 8, h = 8 }, 0,
+			{ 4, color, 2, shadow_color, 12, color }
 		hov = hovered(_mouse, _box)
 	end
 	if not disabled and hov and not cursor.l then
 		--poke(0x3ffb, 129)
-		p = {2, shadow_color, 12, hover_color, 4, hover_color}
+		p = { 2, shadow_color, 12, hover_color, 4, hover_color }
 	elseif not disabled and hov and cursor.l then
 		--poke(0x3ffb, 131)
-		p = {2, hover_color, 12, hover_color, 4, hover_color}
-		ck = {0, 4}
+		p = { 2, hover_color, 12, hover_color, 4, hover_color }
+		ck = { 0, 4 }
 	end
 	pal(p)
 	spr(id, x, y, ck, 1, flip, rot)
@@ -349,7 +359,6 @@ function ui.draw_button(x, y, flip, id, color, shadow_color, hover_color, hover_
 	end
 end
 
-
 function ui.draw_text_button(x, y, id, width, height, main_color, shadow_color, hover_color, label, locked, small_font)
 	--small_font = small_font or false
 	width, height = width or 8, height or 8
@@ -357,33 +366,34 @@ function ui.draw_text_button(x, y, id, width, height, main_color, shadow_color, 
 	if label then
 		local w = text_width(label.text, small_font)
 		if w + 2 > width then
-		width = w + 2
+			width = w + 2
 		end
 	end
-	local _mouse, _box, ck, p = {x = cursor.x, y = cursor.y}, {x = x, y = y, w = width, h = height}, 0, {BTN_PRESS, main_color, BTN_SHADOW, shadow_color, BTN_MAIN, main_color}
+	local _mouse, _box, ck, p = { x = cursor.x, y = cursor.y }, { x = x, y = y, w = width, h = height }, 0,
+		{ BTN_PRESS, main_color, BTN_SHADOW, shadow_color, BTN_MAIN, main_color }
 	local hov = not locked and hovered(_mouse, _box)
 	if hov and not cursor.l then
 		--poke(0x3ffb, 129)
-		p = {BTN_SHADOW, shadow_color, BTN_MAIN, hover_color, BTN_PRESS, hover_color}
+		p = { BTN_SHADOW, shadow_color, BTN_MAIN, hover_color, BTN_PRESS, hover_color }
 	elseif hov and cursor.l then
 		--poke(0x3ffb, 131)
-		p = {BTN_SHADOW, hover_color, BTN_MAIN, hover_color, BTN_PRESS, hover_color}
-		ck = {0, BTN_PRESS}
+		p = { BTN_SHADOW, hover_color, BTN_MAIN, hover_color, BTN_PRESS, hover_color }
+		ck = { 0, BTN_PRESS }
 	end
 	local lines = {
-		[1] = {x1 =  x, y1 = y + height, x2 =  x + width, y2 = y + height},
-		[2] = {x1 =  x, y1 = y, x2 =  x + width, y2 = y}
+		[1] = { x1 = x, y1 = y + height, x2 = x + width, y2 = y + height },
+		[2] = { x1 = x, y1 = y, x2 = x + width, y2 = y }
 	}
 	if label and width > 8 then
 		if not locked and hov and not cursor.l then
-		rect(x + 4, y, width - 8, height - 1, hover_color)
-		line(x + 4, y + height - 1, x + width - 4, y + height - 1, shadow_color)
+			rect(x + 4, y, width - 8, height - 1, hover_color)
+			line(x + 4, y + height - 1, x + width - 4, y + height - 1, shadow_color)
 		elseif not locked and hov and cursor.l then
-		rect(x + 4, y + 1, width - 8, height - 1, hover_color)
-		label.y = label.y + 1
+			rect(x + 4, y + 1, width - 8, height - 1, hover_color)
+			label.y = label.y + 1
 		else
-		rect(x + 4, y, width - 8, height - 1, main_color)
-		line(x + 4, y + height - 1, x + width - 4, y + height - 1, shadow_color)
+			rect(x + 4, y, width - 8, height - 1, main_color)
+			line(x + 4, y + height - 1, x + width - 4, y + height - 1, shadow_color)
 		end
 	end
 	pal(p)
@@ -401,42 +411,40 @@ function ui.draw_text_button(x, y, id, width, height, main_color, shadow_color, 
 	return false
 end
 
-
 function ui.new_slider(x, y, value, min, max, step, width, height, ditch_color, handle_color, shadow_color)
-  local slider = {
-    x = x,
-    y = y,
-    value = value,
-    min = min,
-    max = max,
-    step = step,
-    width = width,
-    height = height,
-    ditch_color = ditch_color or 13,
-    handle_color = handle_color or 12,
-    shadow_color = shadow_color or 15,
-  }
-  slider.draw = function(self)
-    line(self.x, self.y + 1, self.x + self.width - 1, self.y + 1, self.ditch_color)
-    line(self.x + 1, self.y + 2, self.x + self.width - 1, self.y + 2, self.shadow_color)
-    local x, y = remap(self.value, self.min, self.max, self.x, self.x + self.width - 1), self.y
-    -- line(x, y, x, y + 2, 14)
-    -- line(x + 1, y, x + 1, y + 2, 12)
-    -- line(x + 2, y, x + 2, y + 2, 15)
-    circ(x+1, y+2, 2, self.shadow_color)
-    circ(x, y+1, 2, 12)
-    local text = self.step >= 1 and floor(self.value) or round(self.value, 2)
-    prints(text, self.x + self.width + 15 - (text_width(text, false)/2), self.y - 1)
-  end
-  setmetatable(slider, {__index = slider})
-  return slider
+	local slider = {
+		x = x,
+		y = y,
+		value = value,
+		min = min,
+		max = max,
+		step = step,
+		width = width,
+		height = height,
+		ditch_color = ditch_color or 13,
+		handle_color = handle_color or 12,
+		shadow_color = shadow_color or 15,
+	}
+	slider.draw = function(self)
+		line(self.x, self.y + 1, self.x + self.width - 1, self.y + 1, self.ditch_color)
+		line(self.x + 1, self.y + 2, self.x + self.width - 1, self.y + 2, self.shadow_color)
+		local x, y = remap(self.value, self.min, self.max, self.x, self.x + self.width - 1), self.y
+		-- line(x, y, x, y + 2, 14)
+		-- line(x + 1, y, x + 1, y + 2, 12)
+		-- line(x + 2, y, x + 2, y + 2, 15)
+		circ(x + 1, y + 2, 2, self.shadow_color)
+		circ(x, y + 1, 2, 12)
+		local text = self.step >= 1 and floor(self.value) or round(self.value, 2)
+		prints(text, self.x + self.width + 15 - (text_width(text, false) / 2), self.y - 1)
+	end
+	setmetatable(slider, { __index = slider })
+	return slider
 end
-
 
 function ui.draw_toggle(x, y, value, size, bg, fg, hover)
 	value = value or false
 	bg, fg, hover = bg or 8, fg or 2, hover or 1
-	local hov = hovered({x = cursor.x, y = cursor.y}, {x = x + 1, y = y - 1, w = size*2 + 3, h = size*2 + 3})
+	local hov = hovered({ x = cursor.x, y = cursor.y }, { x = x + 1, y = y - 1, w = size * 2 + 3, h = size * 2 + 3 })
 	if value then
 		circ(x + 4, y + 2, size, hov and hover or fg)
 	end
@@ -446,7 +454,6 @@ function ui.draw_toggle(x, y, value, size, bg, fg, hover)
 	end
 	return false
 end
-
 
 function printo(text, x, y, bg, fg, size)
 	--size = (size == 0 and false) or true
@@ -460,10 +467,9 @@ function printo(text, x, y, bg, fg, size)
 
 	print(text, x - 1, y, bg, false, 1, size)
 	print(text, x + 1, y, bg, false, 1, size)
-	
+
 	print(text, x, y, fg, false, 1, size)
 end
-
 
 function ui.text_label(text, x, y, color, text_bg, text_fg, shadow, small_font)
 	--small_font = not small_font
@@ -484,306 +490,306 @@ GRID_WIDTH = 240 - grid.x
 GRID_HEIGHT = 136 - grid.y
 EMITTER_PRESET = {
 	[1] = {
-		name='Snow',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Snow',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='snow',1,4800,1,1,7,14,15,-0.9,0.9,1.2,0.8,1,1.0,2,0.1,1,0,0.0,0,0,0.0,33.5,3,3.0,0.059999999999999,1.41,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='snow_flakes',1,10000,6,1,1,13,15,-2.0,2.0,0.4,1.5,0.1,1,1.0,5,1,0,0.0,0,0,0.0,37.5,3,3.0,0.25,1.0,0.0,0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'snow', 1, 4800, 1, 1, 7, 14, 15, -0.9, 0.9, 1.2, 0.8, 1, 1.0, 2, 0.1, 1, 0, 0.0, 0, 0, 0.0, 33.5, 3, 3.0, 0.059999999999999, 1.41, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'snow_flakes', 1, 10000, 6, 1, 1, 13, 15, -2.0, 2.0, 0.4, 1.5, 0.1, 1, 1.0, 5, 1, 0, 0.0, 0, 0, 0.0, 37.5, 3, 3.0, 0.25,  1.0,  0.0, 0 },
 		}
 	},
 	[2] = {
-		name='Fire_smoke',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Fire_smoke',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=289,w=1,h=1},vis=true,name='bg_smoke_white',2,500,1,1,1,13,15,-0.1,0.1,-0.3,-0.1,6,0.5,40,0.1,1,2,-0.25,0.4,0,0.0,2.0,0,1,-0.24,1.69,0.0,0.0},
-			{sprite={id=289,w=1,h=1},vis=true,name='fire_orange',1,450,5,8,5,1,2,-0.1,0.1,-0.2,-0.099999999999999,15,1.0,130,0.1,1,2,0.0,-0.4,0,0.0,1.5,1.5,1,-0.21,1.0,0.0,0.0},
-			{sprite={id=0,w=1,h=1},vis=true,name='fire_red',1,300,4,6,5,12,12,-0.1,0.1,-0.2,-0.2,22,1.0,0,0.1,2,2,0.85,-0.6,0,0.0,2.0,1.0,1,-0.07,1.0,0.0,0.0},
-			{sprite={id=289,w=1,h=1},vis=true,name='fg_smoke',2,300,6,4,1,13,14,-0.1,0.1,-1.0,-0.6,6,0.5,0,0.1,1,2,0.0,0,0,0.0,3.0,0,1,-0.14,1.0,0.0,0.0},
-			{sprite={id=0,w=1,h=1},vis=true,name='embers',1,1500,31,1,1,1,2,-1.6,1.6,-0.5,-1.7,1,0.3,115,0.1,1,2,0.0,0,0,0.0,3.5,0,1,-0.23,1.14,0.0,0.0},
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'bg_smoke_white', 2, 500, 1, 1, 1, 13, 15, -0.1, 0.1, -0.3, -0.1, 6,  0.5, 40,  0.1, 1, 2, -0.25, 0.4,  0, 0.0, 2.0, 0,   1, -0.24, 1.69, 0.0, 0.0 },
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'fire_orange', 1, 450, 5, 8, 5, 1, 2, -0.1, 0.1, -0.2, -0.099999999999999, 15, 1.0, 130, 0.1, 1, 2, 0.0, -0.4, 0, 0.0, 1.5, 1.5, 1, -0.21, 1.0, 0.0, 0.0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'fire_red', 1, 300, 4, 6, 5, 12, 12, -0.1, 0.1, -0.2, -0.2,         22, 1.0, 0,   0.1, 2, 2, 0.85,  -0.6, 0, 0.0, 2.0, 1.0, 1, -0.07, 1.0,  0.0, 0.0 },
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'fg_smoke', 2, 300, 6, 4, 1, 13, 14, -0.1, 0.1, -1.0, -0.6,       6,  0.5, 0,   0.1, 1, 2, 0.0,   0,    0, 0.0, 3.0, 0,   1, -0.14, 1.0,  0.0, 0.0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'embers', 1, 1500, 31, 1, 1, 1, 2, -1.6, 1.6, -0.5, -1.7,           1,  0.3, 115, 0.1, 1, 2, 0.0,   0,    0, 0.0, 3.5, 0,   1, -0.23, 1.14, 0.0, 0.0 },
 		}
 	},
 	[3] = {
-		name='Smoke_White',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Smoke_White',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=290,w=1,h=1},vis=true,name='Smoke',2,1000,3,3,4,14,14,0,0,-1.3,0.1,3,0.3,120,0.1,1,0,0.35,-0.2,0,0.0,2.0,1.5,2,-0.35,1.0,0.0,0},
+			{ sprite = { id = 290, w = 1, h = 1 }, vis = true, name = 'Smoke', 2, 1000, 3, 3, 4, 14, 14, 0, 0, -1.3, 0.1, 3, 0.3, 120, 0.1, 1, 0, 0.35, -0.2, 0, 0.0, 2.0, 1.5, 2, -0.35, 1.0, 0.0, 0 },
 		}
 	},
 	[4] = {
-		name='Smoke_Green',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Smoke_Green',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=290,w=1,h=1},vis=true,name='Smoke',2,1000,5,6,4,3,3,0,0,-1.3,0.1,2,0.4,90,0.1,1,0,1.45,0,0,0.0,4.5,1.5,2,-0.35,1.0,0.0,0},
+			{ sprite = { id = 290, w = 1, h = 1 }, vis = true, name = 'Smoke', 2, 1000, 5, 6, 4, 3, 3, 0, 0, -1.3, 0.1, 2, 0.4, 90, 0.1, 1, 0, 1.45, 0, 0, 0.0, 4.5, 1.5, 2, -0.35, 1.0, 0.0, 0 },
 		}
 	},
 	[5] = {
-		name='Rain',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Rain',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='rain_drops',1,1700,1,4,7,7,7,-0.2,0.2,3.7,1.6,3,1,0,0.1,1,0,0.0,0,0,-24,50,7.0,1,1,1.96,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='rain_streaks',1,800,1,2,8,7,7,0,0,2.7,7.9,2,3.2,35,0.1,7,0,0.0,-2.7755575615629e-17,0,-26,50,4.0,3,1,2.61,0.0,0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'rain_drops', 1, 1700, 1, 4, 7, 7, 7, -0.2, 0.2, 3.7, 1.6, 3, 1, 0, 0.1, 1, 0, 0.0, 0,         0, -24, 50, 7.0, 1, 1, 1.96, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'rain_streaks', 1, 800, 1, 2, 8, 7, 7, 0, 0, 2.7, 7.9, 2, 3.2, 35, 0.1, 7, 0, 0.0, -2.7755575615629e-17, 0, -26, 50, 4.0, 3, 1, 2.61, 0.0, 0 },
 		}
 	},
 	[6] = {
-		name='Pixel_Fire',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Pixel_Fire',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='fire_orange_right_spin',1,150,2,8,5,1,2,-1.1,0.6,-7.4,-1.3,2.0,1.0,0,0.1,2,2,1.95,-0.2,0,0.0,1.5,1.0,1,-0.81,1.0,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='fire_orange_left_spin',1,150,2,8,7,1,2,-1.1,0.6,-7.4,-1.3,2,0.8,0,0.1,2,2,1.15,-1,0,0.0,2.0,1.0,1,-0.81,1.0,0.0,0},     
-			{sprite={id=0,w=1,h=1},vis=true,name='fire_orange_left_spin_1',1,150,2,4,7,12,12,-1.1,1.1,-7.4,-1.3,2,0.8,0,0.1,2,2,1.15,-1,0,0.0,2.0,1.0,1,-0.81,1.0,0.0,0}, 
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'fire_orange_right_spin', 1, 150, 2, 8, 5, 1, 2, -1.1, 0.6, -7.4, -1.3, 2.0, 1.0, 0, 0.1, 2, 2, 1.95, -0.2, 0, 0.0, 1.5, 1.0, 1, -0.81, 1.0, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'fire_orange_left_spin', 1, 150, 2, 8, 7, 1, 2, -1.1, 0.6, -7.4, -1.3, 2, 0.8, 0, 0.1, 2, 2, 1.15, -1, 0, 0.0, 2.0, 1.0, 1, -0.81, 1.0, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'fire_orange_left_spin_1', 1, 150, 2, 4, 7, 12, 12, -1.1, 1.1, -7.4, -1.3, 2, 0.8, 0, 0.1, 2, 2, 1.15, -1, 0, 0.0, 2.0, 1.0, 1, -0.81, 1.0, 0.0, 0 },
 		}
 	},
 	[7] = {
-		name='Fountain',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Fountain',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='pixels',1,1100,1,7,7,12,12,-0.3,0.3,-2.6,-2.5,5,1,0,0.1,1,0,0.0,0,0,0.0,0.5,1.0,3,1,1.26,0.0,0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'pixels', 1, 1100, 1, 7, 7, 12, 12, -0.3, 0.3, -2.6, -2.5, 5, 1, 0, 0.1, 1, 0, 0.0, 0, 0, 0.0, 0.5, 1.0, 3, 1, 1.26, 0.0, 0 },
 		}
 	},
 	[8] = {
-		name='Particle_Wind',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Particle_Wind',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='pixels',1,1000,1,7,7,14,15,2.0,3.4,-0.4,1.0,4,1,0,0.1,1,0,0.0,0,0,0.0,0.5,1.0,1,0,0.97,0.0,0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'pixels', 1, 1000, 1, 7, 7, 14, 15, 2.0, 3.4, -0.4, 1.0, 4, 1, 0, 0.1, 1, 0, 0.0, 0, 0, 0.0, 0.5, 1.0, 1, 0, 0.97, 0.0, 0 },
 		}
 	},
 	[9] = {
-		name='Water_bubbles',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Water_bubbles',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=256,w=1,h=1},vis=true,name='bubble_sprite',2,1550,4,5,4,15,15,-0.2,0.2,-2.1,0.3,4,0.5,470,0.1,1,0,0.0,0,0,0.0,4.5,2.0,2,-0.08,1.0,0.0,0},
+			{ sprite = { id = 256, w = 1, h = 1 }, vis = true, name = 'bubble_sprite', 2, 1550, 4, 5, 4, 15, 15, -0.2, 0.2, -2.1, 0.3, 4, 0.5, 470, 0.1, 1, 0, 0.0, 0, 0, 0.0, 4.5, 2.0, 2, -0.08, 1.0, 0.0, 0 },
 		}
 	},
 	[10] = {
-		name='Bouncing_Balls',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Bouncing_Balls',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=289,w=1,h=1},vis=true,name='Ball_Sprite',2,900,1,5,4,1,15,-3.8,3.8,-1.9,-0.6,5,0.4,210,0.1,1,0,0.75,0,0,0.0,12.0,2.5,2,0.52,1.4,0.0,0},
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'Ball_Sprite', 2, 900, 1, 5, 4, 1, 15, -3.8, 3.8, -1.9, -0.6, 5, 0.4, 210, 0.1, 1, 0, 0.75, 0, 0, 0.0, 12.0, 2.5, 2, 0.52, 1.4, 0.0, 0 },
 		}
 	},
 	[11] = {
-		name='Sludge',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Sludge',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=274,w=1,h=1},vis=true,name='sludge',1,950,1,5,1,3,4,-0.2,0.3,-0.3,-0.09,4,2.0,30,0.1,3,0,0.0,0,0,0.0,0.5,0,3,1,0.69,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='pixels',1,1100,5,1,7,3,4,-0.8,1.0,-0.3,-0.3,7,1,0,0.1,1,0,0.0,0,0,0.0,0.5,0,3,0.63,0.99,0.0,0},
-			{sprite={id=274,w=1,h=1},vis=true,name='bubbles',2,2400,95,1,4,3,3,-1.0,1.0,-0.2,0,4,0.7,535,0.1,1,0,0,0,0,0.0,0.5,6.5,2,0.3,0.52,0.0,0},
-			{sprite={id=274,w=1,h=1},vis=true,name='bubbles_1',2,2400,91,1,4,3,3,-1.0,1.0,-0.2,0,6,0.7,535,0.1,1,0,0,0,-1,2.0,0,6.0,1,0.19,0.52,0.0,0},
+			{ sprite = { id = 274, w = 1, h = 1 }, vis = true, name = 'sludge', 1, 950, 1, 5, 1, 3, 4, -0.2, 0.3, -0.3, -0.09, 4, 2.0, 30, 0.1, 3, 0, 0.0, 0, 0, 0.0, 0.5, 0, 3, 1, 0.69, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'pixels', 1, 1100, 5, 1, 7, 3, 4, -0.8, 1.0, -0.3, -0.3, 7, 1, 0, 0.1, 1, 0, 0.0, 0, 0, 0.0, 0.5, 0, 3, 0.63, 0.99, 0.0, 0 },
+			{ sprite = { id = 274, w = 1, h = 1 }, vis = true, name = 'bubbles', 2, 2400, 95, 1, 4, 3, 3, -1.0, 1.0, -0.2, 0, 4, 0.7, 535, 0.1, 1, 0, 0, 0, 0, 0.0, 0.5, 6.5, 2, 0.3, 0.52, 0.0, 0 },
+			{ sprite = { id = 274, w = 1, h = 1 }, vis = true, name = 'bubbles_1', 2, 2400, 91, 1, 4, 3, 3, -1.0, 1.0, -0.2, 0, 6, 0.7, 535, 0.1, 1, 0, 0, 0, -1, 2.0, 0, 6.0, 1, 0.19, 0.52, 0.0, 0 },
 		}
 	},
 	[12] = {
-		name='Love',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Love',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=273,w=1,h=1},vis=true,name='hearts_pink',2,650,1,1,4,9,10,-1.1,1.1,-1.2,-1.1,2,0.8,0,0.1,1,0,0.0,0,0,0.0,4.0,1.0,1,-0.55,1.43,0.0,0},
-			{sprite={id=273,w=1,h=1},vis=true,name='hearts_red',2,650,1,1,4,12,12,-1.1,1.1,-1.5,-1.4,2,0.7,85,0.1,2,0,0.0,0,0,0.0,4.0,1.0,1,-0.55,1.43,0.0,0},
+			{ sprite = { id = 273, w = 1, h = 1 }, vis = true, name = 'hearts_pink', 2, 650, 1, 1, 4, 9, 10, -1.1, 1.1, -1.2, -1.1, 2, 0.8, 0, 0.1, 1, 0, 0.0, 0, 0, 0.0, 4.0, 1.0, 1, -0.55, 1.43, 0.0, 0 },
+			{ sprite = { id = 273, w = 1, h = 1 }, vis = true, name = 'hearts_red', 2, 650, 1, 1, 4, 12, 12, -1.1, 1.1, -1.5, -1.4, 2, 0.7, 85, 0.1, 2, 0, 0.0, 0, 0, 0.0, 4.0, 1.0, 1, -0.55, 1.43, 0.0, 0 },
 		}
 	},
 	[13] = {
-		name='Healing_Aura',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Healing_Aura',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='red_streaks',1,150,5,3,8,12,12,0,0,-2.7,-0.5,7,5.0,5,0.1,71,1,0.0,0,0,-1.0,13.0,0,1,-1.0,1.43,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='red_particles',1,250,5,1,7,12,12,0,0,-2.7,-0.5,5,2.3,5,0.1,16,1,0.0,0,0,-1.0,18.5,0,1,-1.0,1.43,0.0,0},
-			{sprite={id=276,w=1,h=1},vis=true,name='hearts_red',2,600,16,1,4,12,12,3.2,-1.9,-1.9,-0.5,1,0.1,55,0.1,2,1,0.0,0,0,0.0,13.5,2.5,1,-0.77,1.43,0.0,0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'red_streaks', 1, 150, 5, 3, 8, 12, 12, 0, 0, -2.7, -0.5, 7, 5.0, 5, 0.1, 71, 1, 0.0, 0, 0, -1.0, 13.0, 0, 1, -1.0, 1.43, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'red_particles', 1, 250, 5, 1, 7, 12, 12, 0, 0, -2.7, -0.5, 5, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 18.5, 0, 1, -1.0, 1.43, 0.0, 0 },
+			{ sprite = { id = 276, w = 1, h = 1 }, vis = true, name = 'hearts_red', 2, 600, 16, 1, 4, 12, 12, 3.2, -1.9, -1.9, -0.5, 1, 0.1, 55, 0.1, 2, 1, 0.0, 0, 0, 0.0, 13.5, 2.5, 1, -0.77, 1.43, 0.0, 0 },
 		}
 	},
 	[14] = {
-		name='Dino_Eggs',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Dino_Eggs',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=272,w=1,h=1},vis=true,name='sprite',2,950,22,3,4,1,14,-3.7,3.8,-3.3,-1.0,4,1,0,0.1,1,0,-0.4,0,0,0.0,0,0,2,0.89,1.0,0.0,0},
+			{ sprite = { id = 272, w = 1, h = 1 }, vis = true, name = 'sprite', 2, 950, 22, 3, 4, 1, 14, -3.7, 3.8, -3.3, -1.0, 4, 1, 0, 0.1, 1, 0, -0.4, 0, 0, 0.0, 0, 0, 2, 0.89, 1.0, 0.0, 0 },
 		}
 	},
 	[15] = {
-		name='Dark_Energy_Field',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Dark_Energy_Field',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='green_streaks',1,150,5,3,8,3,4,0,0,-2.7,-0.5,7,2.3,5,0.1,16,1,0.0,0,0,-1.0,7.0,0,1,-1.0,1.43,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='pink_streaks',1,100,20,1,8,9,9,0,0,-2.7,-0.5,8,2.3,5,0.1,16,1,0.0,0,0,-1.0,7.0,0,1,-1.0,1.43,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='black_streaks',1,150,5,3,8,8,8,0,0,-2.7,-0.5,8,2.3,5,0.1,16,1,0.0,0,0,-1.0,7.0,0,1,-1.0,1.43,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='shadow_pixels',1,300,2,21,7,8,8,0,0,-2.7,-0.5,3,2.3,5,0.1,16,1,0.0,0,0,-1.0,8.5,2.5,1,-1.0,1.14,0.0,0},
-			{sprite={id=0,w=1,h=1},vis=true,name='green_particles',1,300,5,1,7,3,3,0,0,-2.7,-0.5,5,2.3,5,0.1,16,1,0.0,0,0,-1.0,11.5,0,1,-1.0,1.43,0.0,0},
-	  }
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_streaks', 1, 150, 5, 3, 8, 3, 4, 0, 0, -2.7, -0.5, 7, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 7.0, 0, 1, -1.0, 1.43, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'pink_streaks', 1, 100, 20, 1, 8, 9, 9, 0, 0, -2.7, -0.5, 8, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 7.0, 0, 1, -1.0, 1.43, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'black_streaks', 1, 150, 5, 3, 8, 8, 8, 0, 0, -2.7, -0.5, 8, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 7.0, 0, 1, -1.0, 1.43, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'shadow_pixels', 1, 300, 2, 21, 7, 8, 8, 0, 0, -2.7, -0.5, 3, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 8.5, 2.5, 1, -1.0, 1.14, 0.0, 0 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_particles', 1, 300, 5, 1, 7, 3, 3, 0, 0, -2.7, -0.5, 5, 2.3, 5, 0.1, 16, 1, 0.0, 0, 0, -1.0, 11.5, 0, 1, -1.0, 1.43, 0.0, 0 },
+		}
 	},
 	[16] = {
-		name='Grass_Field',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Grass_Field',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=176,w=1,h=1},vis=true,name='flying_leaves',2,1000,18,1,4,15,15,-2.6,-1.1,-0.6,0.3,5,0.2,70,0.1,1,0,0.6,-0.6,43,-50,0,21.0,1,-0.06,1.0,0.0,0},
-			{sprite={id=176,w=1,h=1},vis=true,name='flying_leaves_small',2,1000,18,1,4,3,3,-2.6,-1.1,0,0,5,0.2,185,0.1,1,0,1.4,0,43,-50,0,21.0,1,-0.07,1.0,0.0,0},
-			{sprite={id=195,w=1,h=2},vis=true,name='growing_ferns',2,2550,65,1,4,15,15,0,0,0,0,1,0.1,85,0.1,1,0,0,0.1,0,-10.0,20.5,0,1,0.0,1.0,0.0,0},
-			{sprite={id=194,w=1,h=2},vis=true,name='growing_ferns_pink',2,2550,115,1,4,15,15,0,0,0,0,1,0.1,85,0.1,1,0,0,0,0,-8.0,24.5,1.5,1,0.0,1.0,0.0,0},
-			{sprite={id=231,w=1,h=2},vis=true,name='big_flowers',2,2450,91,2,4,1,15,-0.1,0,-0.1,0.1,1,1.0,0,0.1,2,0,0,0,0,-9.0,27.5,0,3,0,1.0,0.0,0},
-			{sprite={id=214,w=1,h=1},vis=true,name='small_flowers',2,1200,44,4,4,1,15,-0.1,0.1,0,0,1,0.1,35,0.1,1,0,0,0,0,-7.0,23.5,1.0,3,0,1.0,0.0,0},
-			{sprite={id=212,w=2,h=1},vis=true,name='bottom_grass',2,5900,115,23,4,15,15,0.0,0.0,0,0,1,1.0,0,0.1,1,0,0,0,0,0.0,29.5,2.0,3,0,1.0,0.0,0},
-			{sprite={id=166,w=1,h=1},vis=true,name='bottom_grass_1',2,5900,115,20,4,15,15,0.0,0.0,-0.1,-0.1,1,1.0,0,0.1,1,0,0,0,0,-3.0,26.5,1.5,3,0,0.63,0.0,0},
-			{sprite={id=246,w=1,h=1},vis=true,name='flying_flowers',2,5250,15,1,8,1,14,-3.6,1.4,-1.0,0.3,2,0.7,5,0.1,2,0,0.3,0,0,0.0,37.5,0,1,-0.14,1.0,0.0,0},
+			{ sprite = { id = 176, w = 1, h = 1 }, vis = true, name = 'flying_leaves', 2, 1000, 18, 1, 4, 15, 15, -2.6, -1.1, -0.6, 0.3, 5, 0.2, 70, 0.1, 1, 0, 0.6, -0.6, 43, -50, 0, 21.0, 1, -0.06, 1.0, 0.0, 0 },
+			{ sprite = { id = 176, w = 1, h = 1 }, vis = true, name = 'flying_leaves_small', 2, 1000, 18, 1, 4, 3, 3, -2.6, -1.1, 0, 0, 5, 0.2, 185, 0.1, 1, 0, 1.4, 0, 43, -50, 0,   21.0, 1, -0.07, 1.0,  0.0, 0 },
+			{ sprite = { id = 195, w = 1, h = 2 }, vis = true, name = 'growing_ferns', 2, 2550, 65, 1, 4, 15, 15, 0, 0, 0,  0,    1, 0.1, 85,  0.1, 1, 0, 0,   0.1,  0,  -10.0, 20.5, 0,    1, 0.0,   1.0,  0.0, 0 },
+			{ sprite = { id = 194, w = 1, h = 2 }, vis = true, name = 'growing_ferns_pink', 2, 2550, 115, 1, 4, 15, 15, 0, 0, 0, 0, 1, 0.1, 85, 0.1, 1, 0, 0,  0,    0,  -8.0,  24.5, 1.5,  1, 0.0,   1.0,  0.0, 0 },
+			{ sprite = { id = 231, w = 1, h = 2 }, vis = true, name = 'big_flowers', 2, 2450, 91, 2, 4, 1, 15, -0.1, 0, -0.1, 0.1, 1, 1.0, 0,  0.1, 2, 0, 0,   0,    0,  -9.0,  27.5, 0,    3, 0,     1.0,  0.0, 0 },
+			{ sprite = { id = 214, w = 1, h = 1 }, vis = true, name = 'small_flowers', 2, 1200, 44, 4, 4, 1, 15, -0.1, 0.1, 0, 0, 1, 0.1, 35,  0.1, 1, 0, 0,   0,    0,  -7.0,  23.5, 1.0,  3, 0,     1.0,  0.0, 0 },
+			{ sprite = { id = 212, w = 2, h = 1 }, vis = true, name = 'bottom_grass', 2, 5900, 115, 23, 4, 15, 15, 0.0, 0.0, 0, 0, 1, 1.0, 0,  0.1, 1, 0, 0,   0,    0,  0.0,   29.5, 2.0,  3, 0,     1.0,  0.0, 0 },
+			{ sprite = { id = 166, w = 1, h = 1 }, vis = true, name = 'bottom_grass_1', 2, 5900, 115, 20, 4, 15, 15, 0.0, 0.0, -0.1, -0.1, 1, 1.0, 0, 0.1, 1, 0, 0, 0, 0, -3.0, 26.5, 1.5,  3, 0,     0.63, 0.0, 0 },
+			{ sprite = { id = 246, w = 1, h = 1 }, vis = true, name = 'flying_flowers', 2, 5250, 15, 1, 8, 1, 14, -3.6, 1.4, -1.0, 0.3, 2, 0.7, 5, 0.1, 2, 0, 0.3, 0, 0, 0.0,   37.5, 0,    1, -0.14, 1.0,  0.0, 0 },
 		}
 	},
 	[17] = {
-		name='Bouncy_lines',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=120},
+		name = 'Bouncy_lines',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 120 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='Default',1,3000,5,1,8,1,15,-3.2,-3.3,0.8,-1.8,5,7.0,0,0.1,12,2,1.15,1.3877787807814e-16,0,0,0,0,2,0.52,1.0,0,1.0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'Default', 1, 3000, 5, 1, 8, 1, 15, -3.2, -3.3, 0.8, -1.8, 5, 7.0, 0, 0.1, 12, 2, 1.15, 1.3877787807814e-16, 0, 0, 0, 0, 2, 0.52, 1.0, 0, 1.0 },
 		}
 	},
 	[18] = {
-		name='Cheap_pixel_fire',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Cheap_pixel_fire',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=48,w=1,h=1},vis=true,name='triangle_orange',1,200,1,5,5,1,2,-0.7,0.7,-2.0,-3.3,3.0,0.8,0,0.1,1,2,1.3,-0.7,0,0.0,1.0,0.5,1,0.37,1.0,0.0,0},
-			{sprite={id=48,w=1,h=1},vis=true,name='Pixels',1,300,1,1,7,1,2,-0.7,0.7,-2.0,-3.3,3.0,0.8,0,0.1,1,2,1.4,-0.7,0,0.0,1.0,0.5,1,0.37,1.0,0.0,0},
-			{sprite={id=48,w=1,h=1},vis=true,name='triangleb_red',1,200,2,2,5,12,12,-0.7,0.7,-2.0,-3.3,4.0,1.0,0,0.1,1,2,1.4,-2.7755575615629e-17,0,0.0,1.0,0.5,1,0.37,1.0,0.0,0},
-	  }
+			{ sprite = { id = 48, w = 1, h = 1 }, vis = true, name = 'triangle_orange', 1, 200, 1, 5, 5, 1, 2, -0.7, 0.7, -2.0, -3.3, 3.0, 0.8, 0, 0.1, 1, 2, 1.3, -0.7,   0, 0.0, 1.0, 0.5, 1, 0.37, 1.0, 0.0, 0 },
+			{ sprite = { id = 48, w = 1, h = 1 }, vis = true, name = 'Pixels', 1, 300, 1, 1, 7, 1, 2, -0.7, 0.7, -2.0, -3.3, 3.0, 0.8, 0, 0.1, 1, 2, 1.4, -0.7,            0, 0.0, 1.0, 0.5, 1, 0.37, 1.0, 0.0, 0 },
+			{ sprite = { id = 48, w = 1, h = 1 }, vis = true, name = 'triangleb_red', 1, 200, 2, 2, 5, 12, 12, -0.7, 0.7, -2.0, -3.3, 4.0, 1.0, 0, 0.1, 1, 2, 1.4, -2.7755575615629e-17, 0, 0.0, 1.0, 0.5, 1, 0.37, 1.0, 0.0, 0 },
+		}
 	},
 	[19] = {
-		name='Spinning_Cloud',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Spinning_Cloud',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='spinning_green_1',1,2400,1,3,1,3,3,0,-1.8846035843012e-14,-8.7,2.7755575615629e-17,37,0.7,0,0.1,2,1,0.0,0,11,12,12.0,0,4,0,1.0,-1,3.4},
-			{sprite={id=0,w=1,h=1},vis=true,name='spinning_black',1,3000,5,2,1,8,8,0,-2.5,-6.9,0,13,0.1,90,0.1,2,1,0.0,0,12,13,4.0,2.5,1,0,1.0,-0.38,10.4},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'spinning_green_1', 1, 2400, 1, 3, 1, 3, 3, 0, -1.8846035843012e-14, -8.7, 2.7755575615629e-17, 37, 0.7, 0, 0.1, 2, 1, 0.0, 0, 11, 12, 12.0, 0, 4, 0, 1.0, -1, 3.4 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'spinning_black', 1, 3000, 5, 2, 1, 8, 8, 0, -2.5,   -6.9, 0,                   13, 0.1, 90, 0.1, 2, 1, 0.0, 0, 12, 13, 4.0,  2.5, 1, 0, 1.0, -0.38, 10.4 },
 		}
 	},
 	[20] = {
-		name='Shadow_Vortex',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Shadow_Vortex',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='dark_vortex',1,2600,1,1,6,8,8,0,0,0,0,1,0.5,100,0.1,2,1,-0.75,0,0,10,18.5,0,4,0,1.0,1,1},
-			{sprite={id=0,w=1,h=1},vis=true,name='green_particles',1,1500,10,1,3,3,3,3.6,-3.6,2.7755575615629e-17,0,1,3.0,0,0.1,1,1,0.0,0,18,0.0,0,0,1,0,1.0,1,3.2},
-	  }
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'dark_vortex', 1, 2600, 1, 1, 6, 8, 8, 0, 0, 0,             0, 1, 0.5, 100, 0.1, 2, 1, -0.75, 0, 0,  10,  18.5, 0, 4, 0, 1.0, 1, 1 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_particles', 1, 1500, 10, 1, 3, 3, 3, 3.6, -3.6, 2.7755575615629e-17, 0, 1, 3.0, 0, 0.1, 1, 1, 0.0, 0, 18, 0.0, 0, 0, 1, 0, 1.0, 1, 3.2 },
+		}
 	},
 	[21] = {
-		name='DNA',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'DNA',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='Default',1,2000,32,43,1,12,15,0,0,-3.3,2.1,5,1.7,0,0.1,38,2,5,1,0,0,11.0,11.0,2,1,1.39,1,5.1},
-			{sprite={id=0,w=1,h=1},vis=true,name='Default_1',1,1950,32,43,1,12,15,0,0,-3.3,2.1,5,2.9,0,0.1,38,2,5,1,0,0,11.0,11.0,2,1,1.39,1,5.1},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'Default', 1, 2000, 32, 43, 1, 12, 15, 0, 0, -3.3, 2.1, 5, 1.7, 0, 0.1, 38, 2, 5, 1, 0, 0, 11.0, 11.0, 2, 1, 1.39, 1, 5.1 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'Default_1', 1, 1950, 32, 43, 1, 12, 15, 0, 0, -3.3, 2.1, 5, 2.9, 0, 0.1, 38, 2, 5, 1, 0, 0, 11.0, 11.0, 2, 1, 1.39, 1, 5.1 },
 		}
 	},
 	[22] = {
-		name='Shadow_Vortex_2',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Shadow_Vortex_2',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='green_tris',1,3000,33,1,5,3,3,0,0,0,0,1,0.3,0.1,100,2,1,-0.75,0,0,10,18.5,0,4,0,1.0,1,1},
-			{sprite={id=0,w=1,h=1},vis=true,name='green_tris_2',1,3000,33,1,6,5,6,0,0,0,0,1,0.3,0.1,100,1,1,0.75,0,0,10,18.5,0,4,0,1.0,1,1},
-			{sprite={id=0,w=1,h=1},vis=true,name='green_particles',1,1500,10,1,7,6,5,0,0,2.7755575615629e-17,0,1,3.0,0,0.1,1,1,0.0,0,0,16,3.0,3.0,1,0,1.0,1,3.2},
-			{sprite={id=0,w=1,h=1},vis=true,name='dark_vortex_1',1,2600,3,1,6,8,8,0,0,0,0,1,0.5,100,0.1,2,1,-0.75,0,0,10,18.5,0,4,0,1.0,1,1},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_tris', 1, 3000, 33, 1, 5, 3, 3, 0, 0, 0,        0, 1, 0.3, 0.1, 100, 2, 1, -0.75, 0, 0, 10, 18.5, 0,   4, 0, 1.0, 1, 1 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_tris_2', 1, 3000, 33, 1, 6, 5, 6, 0, 0, 0,      0, 1, 0.3, 0.1, 100, 1, 1, 0.75,  0, 0, 10, 18.5, 0,   4, 0, 1.0, 1, 1 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'green_particles', 1, 1500, 10, 1, 7, 6, 5, 0, 0, 2.7755575615629e-17, 0, 1, 3.0, 0, 0.1, 1, 1, 0.0, 0, 0, 16, 3.0, 3.0, 1, 0, 1.0, 1, 3.2 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'dark_vortex_1', 1, 2600, 3, 1, 6, 8, 8, 0, 0, 0,      0, 1, 0.5, 100, 0.1, 2, 1, -0.75, 0, 0, 10, 18.5, 0,   4, 0, 1.0, 1, 1 },
 		}
 	},
 	[23] = {
-		name='Dreamcatcher',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Dreamcatcher',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='white_center',1,2700,6,4,7,15,15,0,0,0,0,29,0.8,0,0.1,1,1,0.0,0,-8,3,0,7.5,1,0,1.0,1,2.2},
-			{sprite={id=0,w=1,h=1},vis=true,name='black_tri_mid',1,1750,6,3,5,8,8,0,0,0,0,1,2.2,0,0.1,1,1,1.25,0,-13,0,3.5,19.5,1,0,1.0,1,-2.2},
-			{sprite={id=289,w=1,h=1},vis=true,name='blue_outer_1',2,4150,6,4,6,5,7,0,0,0,0,29,0.2,1000,0.1,1,1,-1.3,0,-20,3,0,7.5,1,0,1.0,1,1.0},
-			{sprite={id=289,w=1,h=1},vis=true,name='red_outer_tris',1,4150,12,1,6,12,12,0,0,0,0,29,2.4,1000,0.1,1,1,0.2,-0.6,-28,3,0,0,1,0,1.0,1,1.0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'white_center', 1, 2700, 6, 4, 7, 15, 15, 0, 0, 0, 0, 29, 0.8, 0, 0.1, 1, 1, 0.0, 0, -8, 3, 0, 7.5, 1, 0, 1.0, 1, 2.2 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'black_tri_mid', 1, 1750, 6, 3, 5, 8, 8, 0, 0, 0, 0, 1, 2.2, 0, 0.1, 1, 1, 1.25, 0, -13, 0, 3.5, 19.5, 1, 0, 1.0, 1, -2.2 },
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'blue_outer_1', 2, 4150, 6, 4, 6, 5, 7, 0, 0, 0, 0, 29, 0.2, 1000, 0.1, 1, 1, -1.3, 0, -20, 3, 0, 7.5, 1, 0, 1.0, 1, 1.0 },
+			{ sprite = { id = 289, w = 1, h = 1 }, vis = true, name = 'red_outer_tris', 1, 4150, 12, 1, 6, 12, 12, 0, 0, 0, 0, 29, 2.4, 1000, 0.1, 1, 1, 0.2, -0.6, -28, 3, 0, 0, 1, 0, 1.0, 1, 1.0 },
 		}
 	},
 	[24] = {
-		name='Spinning_Cloud2',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Spinning_Cloud2',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='spinning_green_1',1,2400,1,3,7,3,3,0,-1.8846035843012e-14,-8.7,2.7755575615629e-17,37,0.7,0, 0.1, 2,1,0.0, 0,11,12,12.0,0,4,0,1.0,-1,3.4},
-			{sprite={id=0,w=1,h=1},vis=true,name='inner_vortex_elec',1,1050,20,1,8,7,6,0,-2.5,-6.9,0,13,5.51,15,0.1,-18.5,1,-1.85,0.2,-3,-5,3.5,8.5,4,0,1.0,1,25.7},
-			{sprite={id=246,w=1,h=1},vis=true,name='inner_vortex_black_cb',1,3000,9,3,2,8,8,0,-2.5,-6.9,0,13,0.4,32,0.9,2,1,0.0,0,6,2,4.0,4.0,1,0,1.0,-0.38,10.4},
-			{sprite={id=247,w=1,h=1},vis=true,name='spinning_black_ring',1,3000,5,2,1,8,8,0,-2.5,-6.9,0,13,0.1,90,0.1,2,1,0.0,0,12,13,4.0,2.5,1,0,1.0,-0.38,10.4},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'spinning_green_1', 1, 2400, 1, 3, 7, 3, 3, 0, -1.8846035843012e-14, -8.7, 2.7755575615629e-17, 37, 0.7, 0, 0.1, 2, 1, 0.0, 0,   11, 12, 12.0, 0,   4, 0, 1.0, -1,    3.4 },
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'inner_vortex_elec', 1, 1050, 20, 1, 8, 7, 6, 0, -2.5,       -6.9, 0,                   13, 5.51, 15, 0.1, -18.5, 1, -1.85, 0.2, -3, -5, 3.5,  8.5, 4, 0, 1.0, 1,     25.7 },
+			{ sprite = { id = 246, w = 1, h = 1 }, vis = true, name = 'inner_vortex_black_cb', 1, 3000, 9, 3, 2, 8, 8, 0, -2.5,  -6.9, 0,                   13, 0.4,  32, 0.9, 2,     1, 0.0,   0,   6,  2,  4.0,  4.0, 1, 0, 1.0, -0.38, 10.4 },
+			{ sprite = { id = 247, w = 1, h = 1 }, vis = true, name = 'spinning_black_ring', 1, 3000, 5, 2, 1, 8, 8, 0, -2.5,    -6.9, 0,                   13, 0.1,  90, 0.1, 2,     1, 0.0,   0,   12, 13, 4.0,  2.5, 1, 0, 1.0, -0.38, 10.4 },
 		}
 	},
 	[25] = {
-		name='bullet_default',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'bullet_default',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=310,w=1,h=1},vis=true,name='Projectile',2,1000,5,1,1,12,12,5,5,0,0,6.0,1.0,0,0.1,1,0,0.0,0,0,0,0,0,1,1,0,0,1.0},
+			{ sprite = { id = 310, w = 1, h = 1 }, vis = true, name = 'Projectile', 2, 1000, 5, 1, 1, 12, 12, 5, 5, 0, 0, 6.0, 1.0, 0, 0.1, 1, 0, 0.0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1.0 },
 		}
 	},
 	[26] = {
-		name='Gibs',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'Gibs',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=352,w=1,h=1},vis=true,name='gibs',2,1000,30,3,7,12,12,-0.7,0.7,-2.6,-2.5,6.0,1,0,0.1,1,0,0.35,-0.8,0,0,0,0,3,1,1.0,0.0,0},
-			{sprite={id=352,w=1,h=1},vis=true,name='pixels_1',1,1000,30,20,7,12,12,-0.7,0.7,-3.8,-2.5,7.0,1,0,0.1,1,0,0.35,-0.8,0,0.0,0.5,1.0,3,1,1.0,0.0,0},
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'gibs', 2, 1000, 30, 3, 7, 12, 12, -0.7, 0.7, -2.6, -2.5, 6.0, 1, 0, 0.1, 1, 0, 0.35, -0.8, 0, 0, 0, 0, 3, 1, 1.0, 0.0, 0 },
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'pixels_1', 1, 1000, 30, 20, 7, 12, 12, -0.7, 0.7, -3.8, -2.5, 7.0, 1, 0, 0.1, 1, 0, 0.35, -0.8, 0, 0.0, 0.5, 1.0, 3, 1, 1.0, 0.0, 0 },
 		}
 	},
 	[27] = {
-		name='gib_projectile',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'gib_projectile',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-		  {sprite={id=352,w=1,h=1},vis=true,name='gibs',2,1000,30,3,7,12,12,1.0,1.0,-0.3,-0.3,26.0,1,0,0.1,1,0,0.35,-0.8,0,0,0,0,3,1,0.34,0.0,0},
-		  {sprite={id=352,w=1,h=1},vis=true,name='pixels_1',1,1000,30,20,7,12,12,-0.7,0.7,-3.8,-2.5,7.0,1,0,0.1,1,0,0.35,-0.8,0,0.0,0.5,1.0,3,1,1.0,0.0,0},
-	  }
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'gibs', 2, 1000, 30, 3, 7, 12, 12, 1.0, 1.0, -0.3, -0.3, 26.0, 1, 0, 0.1, 1, 0, 0.35, -0.8, 0, 0, 0, 0, 3, 1, 0.34, 0.0, 0 },
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'pixels_1', 1, 1000, 30, 20, 7, 12, 12, -0.7, 0.7, -3.8, -2.5, 7.0, 1, 0, 0.1, 1, 0, 0.35, -0.8, 0, 0.0, 0.5, 1.0, 3, 1, 1.0, 0.0, 0 },
+		}
 	},
 	[28] = {
-		name='gib_parts',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=125},
+		name = 'gib_parts',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 125 },
 		particle_systems = {
-			{sprite={id=354,w=1,h=1},vis=true,name='rib_cage',2,3000,100,1,7,12,12,1.0,1.0,-0.2,-0.3,13.0,0.78,0,0.1,1,2,0.35,-0.8,0,0,1.0,1.5,2,1,0.32,0.0,0},
-			{sprite={id=352,w=1,h=1},vis=true,name='drumsticks',2,3000,100,2,7,12,12,1.6,1.2,-0.2,-0.7,13.0,0.75,0,0.1,1,2,0.35,-0.8,0,0,1.5,1.5,2,1,0.32,0.0,0},
-			{sprite={id=353,w=1,h=1},vis=true,name='skull',2,3000,100,1,7,12,12,1.4,1.1,-0.099999999999998,-0.5,13.0,0.8,0,0.1,1,2,0.35,-0.8,0,0,1.5,1.5,2,1,0.32,0.0,0},
-			{sprite={id=352,w=1,h=1},vis=true,name='triangles',1,3000,100,30,5,11,12,0.2,4.9,-0.8,-0.3,16,0.78,0,0.1,1,2,-0.35,1,0,0.0,2.5,1.0,2,0.35,1.0,0.0,0},
-			{sprite={id=352,w=1,h=1},vis=true,name='pixels',1,3000,100,30,7,11,12,0.6,1.9,-0.4,-0.1,16,0.78,0,0.1,1,2,-0.35,1,0,0.0,8.0,1.0,3,0.35,1.0,0.0,0},
+			{ sprite = { id = 354, w = 1, h = 1 }, vis = true, name = 'rib_cage', 2, 3000, 100, 1, 7, 12, 12, 1.0, 1.0, -0.2,  -0.3, 13.0, 0.78, 0, 0.1, 1, 2, 0.35,  -0.8, 0, 0,   1.0, 1.5, 2, 1,    0.32, 0.0, 0 },
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'drumsticks', 2, 3000, 100, 2, 7, 12, 12, 1.6, 1.2, -0.2, -0.7, 13.0, 0.75, 0, 0.1, 1, 2, 0.35, -0.8, 0, 0,   1.5, 1.5, 2, 1,    0.32, 0.0, 0 },
+			{ sprite = { id = 353, w = 1, h = 1 }, vis = true, name = 'skull', 2, 3000, 100, 1, 7, 12, 12, 1.4, 1.1, -0.099999999999998, -0.5, 13.0, 0.8, 0, 0.1, 1, 2, 0.35, -0.8, 0, 0, 1.5, 1.5, 2, 1, 0.32, 0.0, 0 },
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'triangles', 1, 3000, 100, 30, 5, 11, 12, 0.2, 4.9, -0.8, -0.3, 16,  0.78, 0, 0.1, 1, 2, -0.35, 1,    0, 0.0, 2.5, 1.0, 2, 0.35, 1.0,  0.0, 0 },
+			{ sprite = { id = 352, w = 1, h = 1 }, vis = true, name = 'pixels', 1, 3000, 100, 30, 7, 11, 12, 0.6, 1.9, -0.4,   -0.1, 16,   0.78, 0, 0.1, 1, 2, -0.35, 1,    0, 0.0, 8.0, 1.0, 3, 0.35, 1.0,  0.0, 0 },
 		}
 	},
 	[29] = {
-		name='green_laser',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'green_laser',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=262,w=1,h=1},vis=true,name='Projectile',1,350,3,3,8,3,3,3.8,5,0,0,9.0,1.86,5,0.1,11.0,2,1.3877787807814e-17,0.5,0,0,1.5,0.5,1,1,0,0,1.0},
+			{ sprite = { id = 262, w = 1, h = 1 }, vis = true, name = 'Projectile', 1, 350, 3, 3, 8, 3, 3, 3.8, 5, 0, 0, 9.0, 1.86, 5, 0.1, 11.0, 2, 1.3877787807814e-17, 0.5, 0, 0, 1.5, 0.5, 1, 1, 0, 0, 1.0 },
 		}
 	},
 	[30] = {
-		name='Shotgun_birdshot',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'Shotgun_birdshot',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=0,w=1,h=1},vis=true,name='pellets',1,1100,30,19,7,15,13,3.0,2.9,-0.5,-0.3,33.0,0.88,0,0.1,1,0,5,-1,0,0,3.5,1.5,2,1,0.4,0,1.0},
-			{sprite={id=291,w=1,h=1},vis=true,name='shell_eject',2,1850,30,1,1,12,12,-0.5,-1.2,-2.4,-1.9,5,0.75,0,0.1,1,0,0.75,0.7,0,0,0,0,2,1,0.81,0,1.0},
+			{ sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'pellets', 1, 1100, 30, 19, 7, 15, 13, 3.0, 2.9, -0.5, -0.3, 33.0, 0.88, 0, 0.1, 1, 0, 5, -1, 0, 0, 3.5, 1.5, 2, 1, 0.4, 0, 1.0 },
+			{ sprite = { id = 291, w = 1, h = 1 }, vis = true, name = 'shell_eject', 2, 1850, 30, 1, 1, 12, 12, -0.5, -1.2, -2.4, -1.9, 5, 0.75, 0, 0.1, 1, 0, 0.75, 0.7, 0, 0, 0, 0, 2, 1, 0.81, 0, 1.0 },
 		}
 	},
 	[31] = {
-		name='clouds_1',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'clouds_1',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=290,w=1,h=1},vis=true,name='Default',2,14500,20,4,1,14,15,-0.9,-0.5,-0.1,0.0,2.0,1,768,0.1,2.5,0,0.05,-0.3,0,0,1.0,5.5,4,0,1.0,0,1.0},
+			{ sprite = { id = 290, w = 1, h = 1 }, vis = true, name = 'Default', 2, 14500, 20, 4, 1, 14, 15, -0.9, -0.5, -0.1, 0.0, 2.0, 1, 768, 0.1, 2.5, 0, 0.05, -0.3, 0, 0, 1.0, 5.5, 4, 0, 1.0, 0, 1.0 },
 		}
 	},
 	[32] = {
-		name='clouds_2',
-		position = vec2(120,68),
-		bounds = {x=113,y=10,w=126,h=126},
+		name = 'clouds_2',
+		position = vec2(120, 68),
+		bounds = { x = 113, y = 10, w = 126, h = 126 },
 		particle_systems = {
-			{sprite={id=304,w=4,h=2},vis=true,name='Default',2,4000,20,3,1,15,15,-1.2,-1.0,-0.1,0.1,3.0,1,462,0.1,1.5,0,0.0,-2.7755575615629e-17,0,0,3.5,8.0,4,0,1.0,-3.4694469519536e-18,1.0},
+			{ sprite = { id = 304, w = 4, h = 2 }, vis = true, name = 'Default', 2, 4000, 20, 3, 1, 15, 15, -1.2, -1.0, -0.1, 0.1, 3.0, 1, 462, 0.1, 1.5, 0, 0.0, -2.7755575615629e-17, 0, 0, 3.5, 8.0, 4, 0, 1.0, -3.4694469519536e-18, 1.0 },
 		}
 	},
 }
@@ -803,18 +809,15 @@ function set_property_unit(property, arg)
 	end
 end
 
-
 --DEFAULT GETTER FOR PARTICLE SETTING
 function default_get(self)
 	return self.unit == 'int' and self.val or tonumber(string.format("%.2f", self.val))
 end
 
-
 --DEFAULT SET FOR PARTICLE SETTING
 function default_set(self, val)
 	return set_property_unit(self, val)
 end
-
 
 --DEFAULT CLICK FUNCTION - KEYBOARD INPUT
 function default_click(self)
@@ -824,28 +827,27 @@ function default_click(self)
 	EDIT_STATE = 'edit_particle_value'
 end
 
-
 --DEFAULT UPDATE FOR MOST PARTICLES
 function particle_default_update(self, dt)
 	if self.age < self.life then
 		self.age = self.age + dt
 		self.time_cycle = self.time_cycle + dt
 		if not self.freeze then
-			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt / 100))
 			if abs(self.rotation_rate) > 0 then
-				self.rotation = self.rotation + (self.rotation_rate/2 * dt)
+				self.rotation = self.rotation + (self.rotation_rate / 2 * dt)
 			end
 			if abs(self.angular_velocity) > 0 then
-				local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
+				local rotation_amount = (self.angular_velocity * self.angular_velocity_scale) * (dt / 100)
 				--trace('rotating: ' .. rotation_amount .. " degrees")
-				self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
+				self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt / 100))
 			end
 			if self.growth_rate > 0 and self.time_cycle >= self.growth_rate then
 				self.time_cycle = self.time_cycle - self.growth_rate
 				self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 			end
 			if abs(self.gravity) > 0 then
-				self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
+				self.vel.y = self.vel.y + ((self.gravity * self.gravity_scale * dt) / 100)
 			end
 		end
 	else
@@ -853,7 +855,7 @@ function particle_default_update(self, dt)
 	end
 
 	local position = self.pos + (self.origin == 1 and EMITTER_POSITION or self.initial_position)
-	local a, b = position - self.radius/2, position + self.radius/2
+	local a, b = position - self.radius / 2, position + self.radius / 2
 	if not hovered(a, self.bounds) or not hovered(b, self.bounds) then
 		if self.collision == "Kill" then
 			self:kill()
@@ -873,7 +875,7 @@ function particle_default_update(self, dt)
 			--self.age = self.age + 10
 		elseif self.collision == 'Stop' then
 			self.freeze = true
-			self.pos = self.pos + (-self.vel*0.2)
+			self.pos = self.pos + (-self.vel * 0.2)
 			self.rotation_rate = 0
 			self.vel = vec2()
 			--self.age = self.age + 10
@@ -884,13 +886,10 @@ function particle_default_update(self, dt)
 			return
 		end
 	end
-
-
 end
 
-
 --GENERIC PARTICLE - USED WHEN CLICKING THE '+' BUTTON TO ADD NEW PARTICLE LAYER
-DEFAULT_NEW_PARTICLE = {sprite={id=0,w=1,h=1},vis=true,name='Default',1,1000,20,1,1,15,15,0,0,0,0,5,3.0,0,0.1,1,0,0.0,0,0,0,0,0,1,1,1.0,0,1.0}
+DEFAULT_NEW_PARTICLE = { sprite = { id = 0, w = 1, h = 1 }, vis = true, name = 'Default', 1, 1000, 20, 1, 1, 15, 15, 0, 0, 0, 0, 5, 3.0, 0, 0.1, 1, 0, 0.0, 0, 0, 0, 0, 0, 1, 1, 1.0, 0, 1.0 }
 
 
 --ENUM FOR UI
@@ -956,10 +955,12 @@ PARTICLE_FUNCS = {
 			draw = function(self, dt)
 				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
 				if self.rotation_rate > 0 then
-					self.rotation = self.rotation + (self.rotation_rate/2 * dt)
-					local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius, vec2(pos.x, pos.y + self.radius), pos + (self.radius/2)
+					self.rotation = self.rotation + (self.rotation_rate / 2 * dt)
+					local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius,
+						vec2(pos.x, pos.y + self.radius), pos + (self.radius / 2)
 					if abs(self.rotation) > 0 then
-						a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+						a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+							rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 					end
 					tri(a.x, a.y, b.x, b.y, c.x, c.y, self.color)
 					tri(a.x, a.y, d.x, d.y, c.x, c.y, self.color)
@@ -979,10 +980,12 @@ PARTICLE_FUNCS = {
 			draw = function(self, dt)
 				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
 				if self.rotation_rate > 0 then
-					self.rotation = self.rotation + (self.rotation_rate/2 * dt)
-					local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius, vec2(pos.x, pos.y + self.radius), pos + (self.radius/2)
+					self.rotation = self.rotation + (self.rotation_rate / 2 * dt)
+					local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius,
+						vec2(pos.x, pos.y + self.radius), pos + (self.radius / 2)
 					if abs(self.rotation) > 0 then
-						a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+						a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+							rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 					end
 					line(a.x, a.y, b.x, b.y, self.color)
 					line(b.x, b.y, c.x, c.y, self.color)
@@ -1039,6 +1042,13 @@ PARTICLE_FUNCS = {
 					if self.collision == "Kill" then
 						self:kill()
 					elseif self.collision == "Bounce" then
+						for i = 1, 10 do
+							if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+								self.pos = self.pos - ((self.vel * self.velocity_scale) * (dt/100))/4
+							else
+								break
+							end
+						end
 						if not self.freeze and abs(self.vel:length()) > 0.5 then
 							self.vel = -self.vel
 							self.pos = self.pos + (self.vel)
@@ -1141,21 +1151,43 @@ PARTICLE_FUNCS = {
 					self:kill()
 				end
 
-				if not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds) then
-					if abs(self.vel:length()) < 0.75 then
-						--trace('freezing sprite')
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
+				--PROCESS COLLISION
+				if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+					if self.collision == "Kill" then
+						self:kill()
+					elseif self.collision == "Bounce" then
+						for i = 1, 10 do
+							if (not hovered(a, self.bounds) or not hovered(b, self.bounds) or not hovered(c, self.bounds)) then
+								self.pos = self.pos - ((self.vel * self.velocity_scale) * (dt/100))/4
+							else
+								break
+							end
+						end
+						if not self.freeze and abs(self.vel:length()) > 0.5 then
+							self.vel = -self.vel
+							self.pos = self.pos + (self.vel)
+							self.vel = lerp(self.vel, 0, 0.75)
+							self.rotation_rate = -self.rotation_rate
+							self.rotation_rate = lerp(self.rotation_rate, 0, 0.5)
+							self.rotation = lerp(self.rotation, 0, 0.5)
+						else
+							self.freeze = true
+							self.vel = vec2(0, 0)
+							self.rotation_rate = 0
+							self.rotation = 0
+						end
+						--self.age = self.age + 10
+					elseif self.collision == 'Stop' and not self.freeze then
 						self.freeze = true
-						self.vel = vec2(0, 0)
+						self.pos = self.pos + (-self.vel*0.2)
 						self.rotation_rate = 0
-						self.rotation = 0
-					else
-						self.vel = -self.vel
-						self.pos = self.pos + (self.vel)
-						self.vel = lerp(self.vel, 0, 0.5)
-						--local last_rotation = self.rotation_rate
-						self.rotation_rate = -self.rotation_rate * 1.1
+						self.vel = vec2()
+						--self.age = self.age + 10
+					end
+
+					if self.age > self.life then
+						self:kill()
+						return
 					end
 				end
 			end,
@@ -1187,7 +1219,7 @@ PARTICLE_FUNCS = {
 			update = function(self, dt)
 				local pos = self.pos + self:get_origin()
 				local length = self.radius
-				local a, b = vec2(pos.x, pos.y - length/2), vec2(pos.x, pos.y + length/2)
+				local a, b = vec2(pos.x, pos.y - length / 2), vec2(pos.x, pos.y + length / 2)
 				if not self.rotation == 0 then
 					a = rotatePoint(pos, a, self.rotation)
 					b = rotatePoint(pos, b, self.rotation)
@@ -1196,14 +1228,14 @@ PARTICLE_FUNCS = {
 					self.age = self.age + dt
 					self.time_cycle = self.time_cycle + dt
 					if not self.freeze and abs(self.vel:length()) > 0 then
-						self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+						self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt / 100))
 					end
 					if not self.freeze and abs(self.rotation_rate) > 0 then
-						self.rotation = self.rotation + (self.rotation_rate/2 * dt)
+						self.rotation = self.rotation + (self.rotation_rate / 2 * dt)
 					end
 					if not self.freeze and abs(self.angular_velocity) > 0 then
-						local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
-						self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
+						local rotation_amount = (self.angular_velocity * self.angular_velocity_scale) * (dt / 100)
+						self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt / 100))
 					end
 					if not self.freeze and self.growth_rate > 0 then
 						if self.time_cycle >= self.growth_rate then
@@ -1212,23 +1244,23 @@ PARTICLE_FUNCS = {
 						end
 					end
 					if not self.freeze and abs(self.gravity) > 0 then
-						self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
+						self.vel.y = self.vel.y + ((self.gravity * self.gravity_scale * dt) / 100)
 					end
 				else
 					self:kill()
 				end
 				if (not hovered(a, self.bounds) or not hovered(b, self.bounds)) then
-					if a.x < self.bounds.x then self.pos.x = floor(self.pos.x + (self.radius*0.5)) end
-					if a.x > self.bounds.x then self.pos.x = floor(self.pos.x - (self.radius*0.5)) end
-					if a.y < self.bounds.y then self.pos.y = floor(self.pos.y + (self.radius*0.5)) end
-					if a.y > self.bounds.y then self.pos.y = floor(self.pos.y - (self.radius*0.5)) end
-					if b.x < self.bounds.x then self.pos.x = floor(self.pos.x + (self.radius*0.5)) end
-					if b.x > self.bounds.x then self.pos.x = floor(self.pos.x - (self.radius*0.5)) end
-					if b.y < self.bounds.y then self.pos.y = floor(self.pos.y + (self.radius*0.5)) end
-					if b.y > self.bounds.y then self.pos.y = floor(self.pos.y - (self.radius*0.5)) end
+					if a.x < self.bounds.x then self.pos.x = floor(self.pos.x + (self.radius * 0.5)) end
+					if a.x > self.bounds.x then self.pos.x = floor(self.pos.x - (self.radius * 0.5)) end
+					if a.y < self.bounds.y then self.pos.y = floor(self.pos.y + (self.radius * 0.5)) end
+					if a.y > self.bounds.y then self.pos.y = floor(self.pos.y - (self.radius * 0.5)) end
+					if b.x < self.bounds.x then self.pos.x = floor(self.pos.x + (self.radius * 0.5)) end
+					if b.x > self.bounds.x then self.pos.x = floor(self.pos.x - (self.radius * 0.5)) end
+					if b.y < self.bounds.y then self.pos.y = floor(self.pos.y + (self.radius * 0.5)) end
+					if b.y > self.bounds.y then self.pos.y = floor(self.pos.y - (self.radius * 0.5)) end
 					if self.collision == 'Kill' then
 						self:kill()
-					elseif self.collision  == 'Bounce' then
+					elseif self.collision == 'Bounce' then
 						if abs(self.vel:length()) < 0.25 then
 							--trace('freezing sprite')
 							self.vel = -self.vel * 0.65
@@ -1244,7 +1276,8 @@ PARTICLE_FUNCS = {
 							self.pos = self.pos + (self.vel)
 							--self.vel = lerp(self.vel, 0, 0.75)
 							--local last_rotation = self.rotation_rate
-							self.rotation_rate = self.rotation <= -90 and abs(self.rotation_rate) * -0.33 or abs(self.rotation_rate) * 0.33
+							self.rotation_rate = self.rotation <= -90 and abs(self.rotation_rate) * -0.33 or
+							abs(self.rotation_rate) * 0.33
 							self.rotation = lerp(self.rotation, self.rotation < 0 and -90 or 90, 1)
 							--self.pos.x = ceil(self.pos.x)
 							--self.pos.y = ceil(self.pos.y)
@@ -1268,7 +1301,7 @@ PARTICLE_FUNCS = {
 			draw = function(self, dt)
 				local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
 				local length = self.radius
-				local a, b = vec2(pos.x, pos.y - length/2), vec2(pos.x, pos.y + length/2)
+				local a, b = vec2(pos.x, pos.y - length / 2), vec2(pos.x, pos.y + length / 2)
 				if abs(self.rotation) > 0 then
 					a = rotatePoint(pos, a, self.rotation)
 					b = rotatePoint(pos, b, self.rotation)
@@ -1292,27 +1325,33 @@ PARTICLE_FUNCS = {
 			local w, h = self.w, self.h
 			local padding_x = ceil(w * self.radius * 8)
 			local padding_y = ceil(h * self.radius * 8)
-			local a, b, c, d, center = vec2(pos.x - padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y + padding_y/2), vec2(pos.x - padding_x/2, pos.y + padding_y/2), pos
+			local a, b, c, d, center = vec2(pos.x - padding_x / 2, pos.y - padding_y / 2),
+				vec2(pos.x + padding_x / 2, pos.y - padding_y / 2), vec2(pos.x + padding_x / 2, pos.y + padding_y / 2),
+				vec2(pos.x - padding_x / 2, pos.y + padding_y / 2), pos
 
 			if abs(self.rotation) > 0 then
-				a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+				a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+					rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 			end
 			local id = self.sprite.id
-			pal({12, self.color, 11, self.color + 1})
+			pal({ 12, self.color, 11, self.color + 1 })
 			--rspr(id, pos, 0, self.radius, 0, self.rotation, vec2(w, h), vec2(0, 0))
 			rspr(id, pos.x, pos.y, 0, self.radius, self.radius, 0, self.rotation, w, h, vec2(0, 0), false)
 			pal()
 			--DEBUG RECT
 			if SHOW_PARTICLE_BOUNDS then
-				local a, b, c, d, center = vec2(pos.x - padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y + padding_y/2), vec2(pos.x - padding_x/2, pos.y + padding_y/2), pos
-				a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+				local a, b, c, d, center = vec2(pos.x - padding_x / 2, pos.y - padding_y / 2),
+					vec2(pos.x + padding_x / 2, pos.y - padding_y / 2), vec2(pos.x + padding_x / 2, pos.y + padding_y / 2),
+					vec2(pos.x - padding_x / 2, pos.y + padding_y / 2), pos
+				a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+					rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 				line(a.x, a.y, b.x, b.y, 2)
 				line(b.x, b.y, c.x, c.y, 2)
 				line(c.x, c.y, d.x, d.y, 2)
 				line(d.x, d.y, a.x, a.y, 2)
-				prints(abs(self.vel:length()), pos.x + 8, pos.y - 8, 8, 15, {x = 1, y = 0}, true)
-				prints(tostring(self.freeze), pos.x + 8, pos.y - 16, 8, self.freeze and 12 or 3, {x = 1, y = 0}, true)
-				prints("R: " .. self.rotation, pos.x + 8, pos.y - 24, 8, 15, {x = 1, y = 0}, true)
+				prints(abs(self.vel:length()), pos.x + 8, pos.y - 8, 8, 15, { x = 1, y = 0 }, true)
+				prints(tostring(self.freeze), pos.x + 8, pos.y - 16, 8, self.freeze and 12 or 3, { x = 1, y = 0 }, true)
+				prints("R: " .. self.rotation, pos.x + 8, pos.y - 24, 8, 15, { x = 1, y = 0 }, true)
 				--prints("V: " .. abs(self.vel:length()), pos.x + 8, pos.y - 32, 8, 15, {x = 1, y = 0}, true)
 
 				--rectb(self.bounds, 2)
@@ -1451,7 +1490,7 @@ BASE_PARTICLE_SETTINGS = {
 			default_click(self)
 		end,
 	},
-	y_min= {
+	y_min = {
 		name = "Y Vel Min",
 		hover_text = 'Min y-velocity',
 		val = 0,
@@ -1543,7 +1582,7 @@ BASE_PARTICLE_SETTINGS = {
 		max = 1000,
 		increment = 0.5,
 		unit = 'float',
-		get = default_get, 
+		get = default_get,
 		set = default_set,
 		click = function(self)
 			default_click(self)
@@ -1703,7 +1742,7 @@ BASE_PARTICLE_SETTINGS = {
 			default_click(self)
 		end,
 	},
-	angular_velocity_scale	= {
+	angular_velocity_scale = {
 		name = "Ang. Vel. Scale",
 		hover_text = 'Scalar for angular velocity',
 		val = 1.0,
@@ -1717,10 +1756,10 @@ BASE_PARTICLE_SETTINGS = {
 			default_click(self)
 		end,
 	},
-	sprite = {id = 0, w = 1, h = 1},
+	sprite = { id = 0, w = 1, h = 1 },
 	clones = 0,
 	visibility = true,
-	bounds = {x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT - 1},
+	bounds = { x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT - 1 },
 }
 
 
@@ -1777,22 +1816,20 @@ function unpack_particle_settings(preset)
 	--return setmetatable(new_settings, BASE_PARTICLE_SETTINGS)
 end
 
-
 --ROTATIONAL VELOCITY - THE PIVOT INFLUENCE BY PARTICLE'S GLOBAL OR LOCAL COORDINATE SYSTEM
 function apply_angular_velocity(localPos, angularVelocity, deltaTime)
-    -- Calculate the current angle
-    local currentAngle = math.atan2(localPos.y, localPos.x)
+	-- Calculate the current angle
+	local currentAngle = math.atan2(localPos.y, localPos.x)
 
-    -- Update the angle
-    local newAngle = currentAngle + (angularVelocity * deltaTime)
+	-- Update the angle
+	local newAngle = currentAngle + (angularVelocity * deltaTime)
 
-    -- Calculate the new position in local space
-    local radiusLength = localPos:length()
-    local newLocalPos = vec2(cos(newAngle) * radiusLength, sin(newAngle) * radiusLength)
+	-- Calculate the new position in local space
+	local radiusLength = localPos:length()
+	local newLocalPos = vec2(cos(newAngle) * radiusLength, sin(newAngle) * radiusLength)
 
-    return newLocalPos
+	return newLocalPos
 end
-
 
 --CREATE A SINGLE NEW PARTICLE, BY PASSING PARTICLES UNIQUE SETTINGS TABLE
 function Particle.new(particle_system)
@@ -1819,7 +1856,7 @@ function Particle.new(particle_system)
 	self.time_cycle = 0
 	self.radius = settings.initial_scale:get()
 	self.initial_scale = settings.initial_scale:get()
-	self.bounds = settings.bounds or {x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT}
+	self.bounds = settings.bounds or { x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT }
 	self.age = 0
 	self.shape = settings.shape:get()
 	self.collision = settings.collision:get()
@@ -1829,7 +1866,8 @@ function Particle.new(particle_system)
 	self.w, self.h = settings.sprite.w or 1, settings.sprite.h or 1
 	self.sprite = settings.sprite
 	self.get_origin = function(self) return (self.origin == 1 and EMITTER_POSITION or self.initial_position) end
-	self.update = self.type == 'Sprite' and (function(self, dt) PARTICLE_FUNCS['Sprite'].update(self, dt) end) or (function(self, dt) PARTICLE_FUNCS[self.type][self.shape].update(self, dt) end)
+	self.update = self.type == 'Sprite' and (function(self, dt) PARTICLE_FUNCS['Sprite'].update(self, dt) end) or
+	(function(self, dt) PARTICLE_FUNCS[self.type][self.shape].update(self, dt) end)
 	if self.type == 'Sprite' then
 		self.draw = function(self, dt)
 			PARTICLE_FUNCS['Sprite'].draw(self, dt)
@@ -1842,18 +1880,15 @@ function Particle.new(particle_system)
 	return self
 end
 
-
 --HELPER FUNCTION/SUGAR
 function Particle:isAlive()
 	return self.age < self.life
 end
 
-
 --HELPER FUNCTION/SUGAR
 function Particle:kill()
-	self.age = self.life*2
+	self.age = self.life * 2
 end
-
 
 --HELPER FUNCTION/SUGAR
 function Particle:bounce()
@@ -1872,7 +1907,6 @@ function Particle:bounce()
 	end
 end
 
-
 --HELPER FUNCTION/SUGAR
 function Particle:stop()
 	self.rotation_rate = 0
@@ -1881,21 +1915,22 @@ function Particle:stop()
 	self.freeze = true
 end
 
-
 --RECT'S, RECTB'S AND SPRITE'S UPDATES ARE UNIQUE, BECAUSE HAVING ROTATION REQUIRES CALCULATING ROTATED BOUNDS EACH FRAME FOR COLLISION
 function update_rect(self, dt)
 	local pos = self.pos + (self.origin ~= 1 and self.initial_position or EMITTER_POSITION)
 	local bnd = self.bounds
-	local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius, vec2(pos.x, pos.y + self.radius), pos + (self.radius/2)
+	local a, b, c, d, center = pos, vec2(pos.x + self.radius, pos.y), pos + self.radius, vec2(pos.x, pos.y + self.radius),
+		pos + (self.radius / 2)
 	if not self.freeze then
 		if abs(self.rotation) > 0 then
-			a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+			a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+				rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 		end
 		if abs(self.angular_velocity) > 0 then
 			--local origin = self.origin == 1 and EMITTER_POSITION or self.initial_position
-			local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
+			local rotation_amount = (self.angular_velocity * self.angular_velocity_scale) * (dt / 100)
 			--trace('rotating: ' .. rotation_amount .. " degrees")
-			self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
+			self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt / 100))
 		end
 	end
 	if not self.freeze and not (hovered(a, bnd) and hovered(b, bnd) and hovered(c, bnd) and hovered(d, bnd)) then
@@ -1916,9 +1951,9 @@ function update_rect(self, dt)
 			self.radius = clamp(self.radius + self.growth_size, -self.max_growth, self.max_growth)
 		end
 		if not self.freeze then
-			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt / 100))
 			if abs(self.gravity) > 0 then
-				self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
+				self.vel.y = self.vel.y + ((self.gravity * self.gravity_scale * dt) / 100)
 			end
 		end
 	end
@@ -1927,7 +1962,6 @@ function update_rect(self, dt)
 		self:kill()
 	end
 end
-
 
 --RECT'S, RECTB'S AND SPRITE'S UPDATES ARE UNIQUE, BECAUSE HAVING ROTATION REQUIRES CALCULATING ROTATED BOUNDS EACH FRAME FOR COLLISION
 function update_sprite_rect(self, dt)
@@ -1944,9 +1978,9 @@ function update_sprite_rect(self, dt)
 			self.radius = clamp(self.radius + 0.1, 0, self.max_growth)
 		end
 		if not self.freeze then
-			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt/100))
+			self.pos = self.pos + ((self.vel * self.velocity_scale) * (dt / 100))
 			if abs(self.gravity) > 0 then
-				self.vel.y = self.vel.y + ((self.gravity*self.gravity_scale*dt)/100)
+				self.vel.y = self.vel.y + ((self.gravity * self.gravity_scale * dt) / 100)
 			end
 		end
 	end
@@ -1956,19 +1990,22 @@ function update_sprite_rect(self, dt)
 	local w, h = self.w, self.h
 	local padding_x = ceil(w * self.radius * 8)
 	local padding_y = ceil(h * self.radius * 8)
-	local a, b, c, d, center = vec2(pos.x - padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y - padding_y/2), vec2(pos.x + padding_x/2, pos.y + padding_y/2), vec2(pos.x - padding_x/2, pos.y + padding_y/2), pos
+	local a, b, c, d, center = vec2(pos.x - padding_x / 2, pos.y - padding_y / 2),
+		vec2(pos.x + padding_x / 2, pos.y - padding_y / 2), vec2(pos.x + padding_x / 2, pos.y + padding_y / 2),
+		vec2(pos.x - padding_x / 2, pos.y + padding_y / 2), pos
 	if not self.freeze then
 		if abs(self.rotation_rate) > 0 then
 			self.rotation = self.rotation + (self.rotation_rate * dt)
 		end
 		if abs(self.rotation) > 0 then
-			a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation), rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
+			a, b, c, d = rotatePoint(center, a, self.rotation), rotatePoint(center, b, self.rotation),
+				rotatePoint(center, c, self.rotation), rotatePoint(center, d, self.rotation)
 		end
 		if abs(self.angular_velocity) > 0 then
 			--local origin = self.origin == 1 and EMITTER_POSITION or self.initial_position
-			local rotation_amount = (self.angular_velocity*self.angular_velocity_scale) * (dt/100)
+			local rotation_amount = (self.angular_velocity * self.angular_velocity_scale) * (dt / 100)
 			--trace('rotating: ' .. rotation_amount .. " degrees")
-			self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt/100))
+			self.pos = apply_angular_velocity(self.pos, rotation_amount, (dt / 100))
 		end
 	end
 	if not self.freeze and not (hovered(a, bnd) and hovered(b, bnd) and hovered(c, bnd) and hovered(d, bnd)) then
@@ -1985,7 +2022,6 @@ function update_sprite_rect(self, dt)
 	end
 end
 
-
 function rotatePoint(center, point, angle)
 	local radians = angle * math.pi / 180
 	local cosine = math.cos(radians)
@@ -1994,7 +2030,6 @@ function rotatePoint(center, point, angle)
 	return vec2(center.x + (point.x - center.x) * cosine - (point.y - center.y) * sine,
 		center.y + (point.x - center.x) * sine + (point.y - center.y) * cosine)
 end
-
 
 function new_active_particle(particle_system)
 	local particle_batch = {}
@@ -2028,7 +2063,7 @@ AUTO_SCROLL_SPEED = 1
 AUTO_SCROLL_WIDGET_HEIGHT = 9
 PARTICLE_SETTING_SCROLL_POS = 0
 rotation = 0
-selected_sprite = {pos = vec2(0, 9), id = 0, w = 1, h = 1}
+selected_sprite = { pos = vec2(0, 9), id = 0, w = 1, h = 1 }
 TICK = 0
 CENTER_X = 120
 CENTER_Y = 68
@@ -2077,7 +2112,7 @@ CURRENT_PARTICLE_VALUE_EDIT = {}
 PARTICLE_WIDGETS_PER_PAGE = 13
 EMITTER_WIDGETS_PER_PAGE = 10
 PARTICLE_SETTTING_WIDGET_HEIGHT = 9
-EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH/2), grid.y + (GRID_HEIGHT/2))
+EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH / 2), grid.y + (GRID_HEIGHT / 2))
 HOVER_TEXT = false
 HOVER_TEXT_WRAP = 100
 HOVER_TEXT_COLOR = 2
@@ -2091,175 +2126,175 @@ CURRENT_COLOR_2 = 13
 GRID = 507
 HIGHLIGHT = 503
 --DEFAULT_NEW_PARTICLE = {sprite={id=0,w=1,h=1},vis=true,name='Default',1,1000,20,1,1,15,15,0,0,0,0,1,3.0,0,1,0,0.0,0,0,-15.0,0,0,1,0,1.0,0.05,0.0}
-bb = {a = vec2(0, 0), b = vec2(0, 0), w = 0, h = 0}
+bb = { a = vec2(0, 0), b = vec2(0, 0), w = 0, h = 0 }
 bb_set = true
 
 sspr = spr
 
 
 chars = {
-	["A"] = {char = "A", large = 6, small = 4},
-	["B"] = {char = "B", large = 6, small = 4},
-	["C"] = {char = "C", large = 6, small = 4},
-	["D"] = {char = "D", large = 6, small = 4},
-	["E"] = {char = "E", large = 6, small = 4},
-	["F"] = {char = "F", large = 6, small = 4},
-	["G"] = {char = "G", large = 6, small = 4},
-	["H"] = {char = "H", large = 6, small = 4},
-	["I"] = {char = "I", large = 5, small = 4},
-	["J"] = {char = "J", large = 6, small = 4},
-	["K"] = {char = "K", large = 6, small = 4},
-	["L"] = {char = "L", large = 6, small = 4},
-	["M"] = {char = "M", large = 6, small = 4},
-	["N"] = {char = "N", large = 6, small = 4},
-	["O"] = {char = "O", large = 6, small = 4},
-	["P"] = {char = "P", large = 6, small = 4},
-	["Q"] = {char = "Q", large = 6, small = 4},
-	["R"] = {char = "R", large = 6, small = 4},
-	["S"] = {char = "S", large = 6, small = 4},
-	["T"] = {char = "T", large = 5, small = 4},
-	["U"] = {char = "U", large = 6, small = 4},
-	["V"] = {char = "V", large = 6, small = 4},
-	["W"] = {char = "W", large = 6, small = 4},
-	["X"] = {char = "X", large = 6, small = 4},
-	["Y"] = {char = "Y", large = 5, small = 4},
-	["Z"] = {char = "Z", large = 6, small = 4},
-	["a"] = {char = "a", large = 6, small = 4},
-	["b"] = {char = "b", large = 6, small = 4},
-	["c"] = {char = "c", large = 6, small = 4},
-	["d"] = {char = "d", large = 6, small = 4},
-	["e"] = {char = "e", large = 6, small = 4},
-	["f"] = {char = "f", large = 6, small = 4},
-	["g"] = {char = "g", large = 6, small = 4},
-	["h"] = {char = "h", large = 6, small = 4},
-	["i"] = {char = "i", large = 3, small = 2},
-	["j"] = {char = "j", large = 6, small = 4},
-	["k"] = {char = "k", large = 6, small = 4},
-	["l"] = {char = "l", large = 5, small = 4},
-	["m"] = {char = "m", large = 6, small = 4},
-	["n"] = {char = "n", large = 6, small = 4},
-	["o"] = {char = "o", large = 6, small = 4},
-	["p"] = {char = "p", large = 6, small = 4},
-	["q"] = {char = "q", large = 6, small = 4},
-	["r"] = {char = "r", large = 6, small = 4},
-	["s"] = {char = "s", large = 6, small = 4},
-	["t"] = {char = "t", large = 6, small = 4},
-	["u"] = {char = "u", large = 6, small = 4},
-	["v"] = {char = "v", large = 6, small = 4},
-	["w"] = {char = "w", large = 6, small = 4},
-	["x"] = {char = "x", large = 6, small = 4},
-	["y"] = {char = "y", large = 6, small = 4},
-	["z"] = {char = "z", large = 6, small = 4},
-	["0"] = {char = "0", large = 6, small = 4},
-	["1"] = {char = "1", large = 5, small = 4},
-	["2"] = {char = "2", large = 6, small = 4},
-	["3"] = {char = "3", large = 6, small = 4},
-	["4"] = {char = "4", large = 6, small = 4},
-	["5"] = {char = "5", large = 6, small = 4},
-	["6"] = {char = "6", large = 6, small = 4},
-	["7"] = {char = "7", large = 6, small = 4},
-	["8"] = {char = "8", large = 6, small = 4},
-	["9"] = {char = "9", large = 6, small = 4},
-	["!"] = {char = "!", large = 3, small = 2},
-	["@"] = {char = "@", large = 6, small = 4},
-	["#"] = {char = "#", large = 6, small = 4},
-	["$"] = {char = "$", large = 6, small = 4},
-	["%"] = {char = "%", large = 6, small = 4},
-	["^"] = {char = "^", large = 6, small = 4},
-	["&"] = {char = "&", large = 6, small = 4},
-	["*"] = {char = "*", large = 6, small = 4},
-	["("] = {char = "(", large = 3, small = 3},
-	[")"] = {char = ")", large = 3, small = 3},
-	["-"] = {char = "-", large = 4, small = 4},
-	["_"] = {char = "_", large = 5, small = 4},
-	["="] = {char = "=", large = 4, small = 4},
-	["+"] = {char = "+", large = 4, small = 4},
-	["{"] = {char = "{", large = 4, small = 4},
-	["}"] = {char = "}", large = 4, small = 4},
-	["["] = {char = "[", large = 3, small = 3},
-	["]"] = {char = "]", large = 3, small = 3},
-	[";"] = {char = ";", large = 3, small = 3},
-	[":"] = {char = ":", large = 3, small = 2},
-	["'"] = {char = "'", large = 3, small = 2},
-	[","] = {char = ",", large = 3, small = 3},
-	["<"] = {char = "<", large = 4, small = 4},
-	["."] = {char = ".", large = 3, small = 2},
-	[">"] = {char = ">", large = 4, small = 4},
-	["/"] = {char = "/", large = 6, small = 4},
-	["?"] = {char = "?", large = 5, small = 4},
-	["\""]= {char = "\"",large = 4, small = 4},
-	['`'] = {char = '`', large = 3, small = 3},
-	['~'] = {char = '~', large = 5, small = 4},
-	[' '] = {char = ' ', large = 4, small = 2},
+	["A"] = { char = "A", large = 6, small = 4 },
+	["B"] = { char = "B", large = 6, small = 4 },
+	["C"] = { char = "C", large = 6, small = 4 },
+	["D"] = { char = "D", large = 6, small = 4 },
+	["E"] = { char = "E", large = 6, small = 4 },
+	["F"] = { char = "F", large = 6, small = 4 },
+	["G"] = { char = "G", large = 6, small = 4 },
+	["H"] = { char = "H", large = 6, small = 4 },
+	["I"] = { char = "I", large = 5, small = 4 },
+	["J"] = { char = "J", large = 6, small = 4 },
+	["K"] = { char = "K", large = 6, small = 4 },
+	["L"] = { char = "L", large = 6, small = 4 },
+	["M"] = { char = "M", large = 6, small = 4 },
+	["N"] = { char = "N", large = 6, small = 4 },
+	["O"] = { char = "O", large = 6, small = 4 },
+	["P"] = { char = "P", large = 6, small = 4 },
+	["Q"] = { char = "Q", large = 6, small = 4 },
+	["R"] = { char = "R", large = 6, small = 4 },
+	["S"] = { char = "S", large = 6, small = 4 },
+	["T"] = { char = "T", large = 5, small = 4 },
+	["U"] = { char = "U", large = 6, small = 4 },
+	["V"] = { char = "V", large = 6, small = 4 },
+	["W"] = { char = "W", large = 6, small = 4 },
+	["X"] = { char = "X", large = 6, small = 4 },
+	["Y"] = { char = "Y", large = 5, small = 4 },
+	["Z"] = { char = "Z", large = 6, small = 4 },
+	["a"] = { char = "a", large = 6, small = 4 },
+	["b"] = { char = "b", large = 6, small = 4 },
+	["c"] = { char = "c", large = 6, small = 4 },
+	["d"] = { char = "d", large = 6, small = 4 },
+	["e"] = { char = "e", large = 6, small = 4 },
+	["f"] = { char = "f", large = 6, small = 4 },
+	["g"] = { char = "g", large = 6, small = 4 },
+	["h"] = { char = "h", large = 6, small = 4 },
+	["i"] = { char = "i", large = 3, small = 2 },
+	["j"] = { char = "j", large = 6, small = 4 },
+	["k"] = { char = "k", large = 6, small = 4 },
+	["l"] = { char = "l", large = 5, small = 4 },
+	["m"] = { char = "m", large = 6, small = 4 },
+	["n"] = { char = "n", large = 6, small = 4 },
+	["o"] = { char = "o", large = 6, small = 4 },
+	["p"] = { char = "p", large = 6, small = 4 },
+	["q"] = { char = "q", large = 6, small = 4 },
+	["r"] = { char = "r", large = 6, small = 4 },
+	["s"] = { char = "s", large = 6, small = 4 },
+	["t"] = { char = "t", large = 6, small = 4 },
+	["u"] = { char = "u", large = 6, small = 4 },
+	["v"] = { char = "v", large = 6, small = 4 },
+	["w"] = { char = "w", large = 6, small = 4 },
+	["x"] = { char = "x", large = 6, small = 4 },
+	["y"] = { char = "y", large = 6, small = 4 },
+	["z"] = { char = "z", large = 6, small = 4 },
+	["0"] = { char = "0", large = 6, small = 4 },
+	["1"] = { char = "1", large = 5, small = 4 },
+	["2"] = { char = "2", large = 6, small = 4 },
+	["3"] = { char = "3", large = 6, small = 4 },
+	["4"] = { char = "4", large = 6, small = 4 },
+	["5"] = { char = "5", large = 6, small = 4 },
+	["6"] = { char = "6", large = 6, small = 4 },
+	["7"] = { char = "7", large = 6, small = 4 },
+	["8"] = { char = "8", large = 6, small = 4 },
+	["9"] = { char = "9", large = 6, small = 4 },
+	["!"] = { char = "!", large = 3, small = 2 },
+	["@"] = { char = "@", large = 6, small = 4 },
+	["#"] = { char = "#", large = 6, small = 4 },
+	["$"] = { char = "$", large = 6, small = 4 },
+	["%"] = { char = "%", large = 6, small = 4 },
+	["^"] = { char = "^", large = 6, small = 4 },
+	["&"] = { char = "&", large = 6, small = 4 },
+	["*"] = { char = "*", large = 6, small = 4 },
+	["("] = { char = "(", large = 3, small = 3 },
+	[")"] = { char = ")", large = 3, small = 3 },
+	["-"] = { char = "-", large = 4, small = 4 },
+	["_"] = { char = "_", large = 5, small = 4 },
+	["="] = { char = "=", large = 4, small = 4 },
+	["+"] = { char = "+", large = 4, small = 4 },
+	["{"] = { char = "{", large = 4, small = 4 },
+	["}"] = { char = "}", large = 4, small = 4 },
+	["["] = { char = "[", large = 3, small = 3 },
+	["]"] = { char = "]", large = 3, small = 3 },
+	[";"] = { char = ";", large = 3, small = 3 },
+	[":"] = { char = ":", large = 3, small = 2 },
+	["'"] = { char = "'", large = 3, small = 2 },
+	[","] = { char = ",", large = 3, small = 3 },
+	["<"] = { char = "<", large = 4, small = 4 },
+	["."] = { char = ".", large = 3, small = 2 },
+	[">"] = { char = ">", large = 4, small = 4 },
+	["/"] = { char = "/", large = 6, small = 4 },
+	["?"] = { char = "?", large = 5, small = 4 },
+	["\""] = { char = "\"", large = 4, small = 4 },
+	['`'] = { char = '`', large = 3, small = 3 },
+	['~'] = { char = '~', large = 5, small = 4 },
+	[' '] = { char = ' ', large = 4, small = 2 },
 }
 
 KEYS = {
-	[ 1] = {'A', 'a'},
-	[ 2] = {'B', 'b'},
-	[ 3] = {'C', 'c'},
-	[ 4] = {'D', 'd'},
-	[ 5] = {'E', 'e'},
-	[ 6] = {'F', 'f'},
-	[ 7] = {'G', 'g'},
-	[ 8] = {'H', 'h'},
-	[ 9] = {'I', 'i'},
-	[10] = {'J', 'j'},
-	[11] = {'K', 'k'},
-	[12] = {'L', 'l'},
-	[13] = {'M', 'm'},
-	[14] = {'N', 'n'},
-	[15] = {'O', 'o'},
-	[16] = {'P', 'p'},
-	[17] = {'Q', 'q'},
-	[18] = {'R', 'r'},
-	[19] = {'S', 's'},
-	[20] = {'T', 't'},
-	[21] = {'U', 'u'},
-	[22] = {'V', 'v'},
-	[23] = {'W', 'w'},
-	[24] = {'X', 'x'},
-	[25] = {'Y', 'y'},
-	[26] = {'Z', 'z'},
-	[27] = {')', '0'},
-	[28] = {'@', '1'},
-	[29] = {'#', '2'},
-	[30] = {'$', '3'},
-	[31] = {'%', '4'},
-	[32] = {'^', '5'},
-	[33] = {'&', '6'},
-	[34] = {'*', '7'},
-	[35] = {'(', '8'},
-	[36] = {'(', '9'},
-	[37] = {'_', '-'},
-	[38] = {'+', '='},
-	[39] = {'{', '['},
-	[40] = {'}', ']'},
-	[41] = {'|', '\\'},
-	[42] = {':', ';'},
-	[43] = {'"', '\''},
-	[44] = {'~', '`'},
-	[45] = {'<', ','},
-	[46] = {'>', '.'},
-	[47] = {'?', '/'},
+	[1] = { 'A', 'a' },
+	[2] = { 'B', 'b' },
+	[3] = { 'C', 'c' },
+	[4] = { 'D', 'd' },
+	[5] = { 'E', 'e' },
+	[6] = { 'F', 'f' },
+	[7] = { 'G', 'g' },
+	[8] = { 'H', 'h' },
+	[9] = { 'I', 'i' },
+	[10] = { 'J', 'j' },
+	[11] = { 'K', 'k' },
+	[12] = { 'L', 'l' },
+	[13] = { 'M', 'm' },
+	[14] = { 'N', 'n' },
+	[15] = { 'O', 'o' },
+	[16] = { 'P', 'p' },
+	[17] = { 'Q', 'q' },
+	[18] = { 'R', 'r' },
+	[19] = { 'S', 's' },
+	[20] = { 'T', 't' },
+	[21] = { 'U', 'u' },
+	[22] = { 'V', 'v' },
+	[23] = { 'W', 'w' },
+	[24] = { 'X', 'x' },
+	[25] = { 'Y', 'y' },
+	[26] = { 'Z', 'z' },
+	[27] = { ')', '0' },
+	[28] = { '@', '1' },
+	[29] = { '#', '2' },
+	[30] = { '$', '3' },
+	[31] = { '%', '4' },
+	[32] = { '^', '5' },
+	[33] = { '&', '6' },
+	[34] = { '*', '7' },
+	[35] = { '(', '8' },
+	[36] = { '(', '9' },
+	[37] = { '_', '-' },
+	[38] = { '+', '=' },
+	[39] = { '{', '[' },
+	[40] = { '}', ']' },
+	[41] = { '|', '\\' },
+	[42] = { ':', ';' },
+	[43] = { '"', '\'' },
+	[44] = { '~', '`' },
+	[45] = { '<', ',' },
+	[46] = { '>', '.' },
+	[47] = { '?', '/' },
 	--[48] = {' '}, --SPACE
 	--[49] = {'    '}, --TAB
 	--[50] = {'\n'}, --ENTER KEY
-	[79] = {'0'},
-	[80] = {'1'},
-	[81] = {'2'},
-	[82] = {'3'},
-	[83] = {'4'},
-	[84] = {'5'},
-	[85] = {'6'},
-	[86] = {'7'},
-	[87] = {'8'},
-	[88] = {'9'},
-	[89] = {'+'},
-	[90] = {'-'},
-	[91] = {'*'},
-	[92] = {'/'},
-	[93] = {''}, -- NUMPAD ENTER
-	[94] = {'.'},
+	[79] = { '0' },
+	[80] = { '1' },
+	[81] = { '2' },
+	[82] = { '3' },
+	[83] = { '4' },
+	[84] = { '5' },
+	[85] = { '6' },
+	[86] = { '7' },
+	[87] = { '8' },
+	[88] = { '9' },
+	[89] = { '+' },
+	[90] = { '-' },
+	[91] = { '*' },
+	[92] = { '/' },
+	[93] = { '' }, -- NUMPAD ENTER
+	[94] = { '.' },
 }
 
 palettes = {
@@ -2268,16 +2303,15 @@ palettes = {
 }
 
 function loadPalette(palette, bank)
-	for i=0,15 do
-		local r=tonumber(string.sub(palette,i*6+1,i*6+2),16)
-		local g=tonumber(string.sub(palette,i*6+3,i*6+4),16)
-		local b=tonumber(string.sub(palette,i*6+5,i*6+6),16)
-		poke(0x3FC0+(i*3)+0,r)
-		poke(0x3FC0+(i*3)+1,g)
-		poke(0x3FC0+(i*3)+2,b)
+	for i = 0, 15 do
+		local r = tonumber(string.sub(palette, i * 6 + 1, i * 6 + 2), 16)
+		local g = tonumber(string.sub(palette, i * 6 + 3, i * 6 + 4), 16)
+		local b = tonumber(string.sub(palette, i * 6 + 5, i * 6 + 6), 16)
+		poke(0x3FC0 + (i * 3) + 0, r)
+		poke(0x3FC0 + (i * 3) + 1, g)
+		poke(0x3FC0 + (i * 3) + 2, b)
 	end
 end
-
 
 function load_settings()
 	local settings = pmem(0)
@@ -2291,7 +2325,6 @@ function load_settings()
 	UNUSED_BIT = extract_bit(settings, 7)
 	trace("Loaded settings!")
 end
-
 
 function save_settings()
 	local settings = 0
@@ -2307,11 +2340,9 @@ function save_settings()
 	trace("Saved settings!")
 end
 
-
 function extract_bit(num, bit)
 	return (num & (1 << bit)) ~= 0
 end
-
 
 function set_bit(num, bit, value)
 	if value then
@@ -2321,10 +2352,10 @@ function set_bit(num, bit, value)
 	end
 end
 
-
 function BOOT()
 	--load_settings()
 end
+
 vbank(0)
 loadPalette(palettes.bg)
 cls()
@@ -2342,11 +2373,10 @@ function deep_copy(obj, seen)
 	return res
 end
 
-
 TEMP_EMITTER = {
 	name = 'TEMP EMITTER',
 	position = vec2(120, 68),
-	bounds = {x = 1, y = 8, w = 238, h = 136 - 18},
+	bounds = { x = 1, y = 8, w = 238, h = 136 - 18 },
 	particle_systems = {
 		[1] = {
 			name = "PARTICLE_PREVIEW_SIMULATION",
@@ -2368,14 +2398,14 @@ EMITTER = {
 	name = 'DefaultEmitter_01',
 	position = EMITTER_POSITION,
 	particle_systems = {},
-	bounds = {x = grid.x + 1, y = grid.y + 1, w = GRID_WIDTH - 2, h = GRID_HEIGHT - 3},
+	bounds = { x = grid.x + 1, y = grid.y + 1, w = GRID_WIDTH - 2, h = GRID_HEIGHT - 3 },
 }
 
 
 EMITTER_DEFAULT = {
 	name = 'DefaultEmitter_01',
-	position = vec2(grid.x + (GRID_WIDTH/2), grid.y + (GRID_HEIGHT/2)),
-	bounds = {x = grid.x + 1, y = grid.y + 1, w = GRID_WIDTH - 2, h = GRID_HEIGHT - 1},
+	position = vec2(grid.x + (GRID_WIDTH / 2), grid.y + (GRID_HEIGHT / 2)),
+	bounds = { x = grid.x + 1, y = grid.y + 1, w = GRID_WIDTH - 2, h = GRID_HEIGHT - 1 },
 	particle_systems = {
 		[1] = {
 			name = "Default",
@@ -2435,12 +2465,12 @@ cursor = {
 	drag = false,
 	panel_drag = false,
 	drag_dir = 0,
-	drag_loc = {x = 0, y = 0},
-	hand_item = {id = 0, count = 0},
-	drag_offset = {x = 0, y = 0},
-	item_stack = {id = 9, count = 100},
-	drag_loc2 = {x = 0, y = 0},
-	drag_offset2 = {x = 0, y = 0},
+	drag_loc = { x = 0, y = 0 },
+	hand_item = { id = 0, count = 0 },
+	drag_offset = { x = 0, y = 0 },
+	item_stack = { id = 9, count = 100 },
+	drag_loc2 = { x = 0, y = 0 },
+	drag_offset2 = { x = 0, y = 0 },
 	cooldown = 0
 }
 
@@ -2469,7 +2499,7 @@ end
 function tw(text, size)
 	local output = 0
 	for i = 1, #text do
-		output = output + (size and chars[text:sub(i,i)].small or chars[text:sub(i,i)].large)
+		output = output + (size and chars[text:sub(i, i)].small or chars[text:sub(i, i)].large)
 	end
 	return output
 end
@@ -2510,14 +2540,16 @@ function update_cursor_state()
 
 	cursor.ltx, cursor.lty = cursor.tx, cursor.ty
 	cursor.tx, cursor.ty, cursor.sx, cursor.sy = tx, ty, sx, sy
-	cursor.lx, cursor.ly, cursor.ll, cursor.lm, cursor.lr, cursor.lsx, cursor.lsy = cursor.x, cursor.y, cursor.l, cursor.m, cursor.r, cursor.sx, cursor.sy
+	cursor.lx, cursor.ly, cursor.ll, cursor.lm, cursor.lr, cursor.lsx, cursor.lsy = cursor.x, cursor.y, cursor.l,
+		cursor.m, cursor.r, cursor.sx, cursor.sy
 	cursor.x, cursor.y, cursor.l, cursor.m, cursor.r, cursor.sx, cursor.sy = x, y, l, m, r, sx, sy
 	if cursor.tx ~= cursor.ltx or cursor.ty ~= cursor.lty then
 		cursor.hold_time = 0
 	end
 	if cursor.cooldown > 0 then
 		cursor.cooldown = cursor.cooldown - 1
-		cursor.l, cursor.r, cursor.ll, cursor.lr, cursor.held_left, cursor.held_right, cursor.hold_time = false, false, false, false, false, false, 0
+		cursor.l, cursor.r, cursor.ll, cursor.lr, cursor.held_left, cursor.held_right, cursor.hold_time = false, false,
+			false, false, false, false, 0
 		cursor.released_left = false
 		cursor.released_right = false
 	else
@@ -2526,14 +2558,12 @@ function update_cursor_state()
 	end
 end
 
-
 function get_screen_cell(mouse_x, mouse_y)
 	local cam_x, cam_y = CENTER_X - floor(pos.x), CENTER_Y - floor(pos.y)
 	local mx = floor(cam_x) % TILE_SIZE
 	local my = floor(cam_y) % TILE_SIZE
 	return mouse_x - ((mouse_x - mx) % TILE_SIZE), mouse_y - ((mouse_y - my) % TILE_SIZE)
 end
-
 
 function get_world_cell(mouse_x, mouse_y)
 	local cam_x = floor(pos.x - CENTER_X)
@@ -2546,7 +2576,6 @@ function get_world_cell(mouse_x, mouse_y)
 	local wy = floor(cam_y / TILE_SIZE) + sy + 1
 	return wx, wy
 end
-
 
 function get_subtile_position(point)
 	point.x = floor(point.x)
@@ -2562,13 +2591,11 @@ function get_subtile_position(point)
 	--local sub_x, sub_y = math.floor(116-local_x), math.floor(64-local_y)
 end
 
-
 function world_to_screen(world_x, world_y)
 	local screen_x = (world_x * TILE_SIZE) - (pos.x - CENTER_X)
 	local screen_y = (world_y * TILE_SIZE) - (pos.y - CENTER_Y)
 	return screen_x - TILE_SIZE, screen_y - TILE_SIZE
 end
-
 
 function screen_to_world(screen_x, screen_y)
 	local cam_x = pos.x - CENTER_X
@@ -2582,82 +2609,73 @@ function screen_to_world(screen_x, screen_y)
 	return wx, wy
 end
 
-
 function prints(txt, x, y, bg, fg, shadow_offset, small_font)
 	bg, fg = bg or 0, fg or 4
-	shadow_offset = shadow_offset or {x = 1, y = 0}
+	shadow_offset = shadow_offset or { x = 1, y = 0 }
 	print(txt, x + shadow_offset.x, y + shadow_offset.y, bg, false, 1, small_font)
 	print(txt, x, y, fg, false, 1, small_font)
 end
-
 
 function hovered(_mouse, _box)
 	local mx, my, ax, by, bw, bh = _mouse.x, _mouse.y, _box.x, _box.y, _box.w, _box.h
 	return mx >= ax and mx < ax + bw and my >= by and my < by + bh
 end
 
-
-function lerp(a,b,mu)
-	return a*(1-mu)+b*mu
+function lerp(a, b, mu)
+	return a * (1 - mu) + b * mu
 end
-
 
 function pal(c0, c1)
 	if not c0 and not c1 then
-	for i = 0, 15 do
-		poke4(0x3FF0 * 2 + i, i)
-	end
+		for i = 0, 15 do
+			poke4(0x3FF0 * 2 + i, i)
+		end
 	elseif type(c0) == 'table' then
-	for i = 1, #c0, 2 do
-		poke4(0x3FF0*2 + c0[i], c0[i + 1])
-	end
+		for i = 1, #c0, 2 do
+			poke4(0x3FF0 * 2 + c0[i], c0[i + 1])
+		end
 	else
-	poke4(0x3FF0*2 + c0, c1)
+		poke4(0x3FF0 * 2 + c0, c1)
 	end
 end
-
 
 function clamp(val, min, max)
 	return math.max(min, math.min(val, max))
 end
 
-
 function swap(object, from_index, to_index)
 	object[from_index], object[to_index] = object[to_index], object[from_index]
 end
-
 
 function remap(n, a, b, c, d)
 	return c + (n - a) * (d - c) / (b - a)
 end
 
-
 function rndi(min, max)
-    -- Ensure that min and max are integers
+	-- Ensure that min and max are integers
 	if min == 0 and max == 0 then return 0 end
-    min, max = floor(min), floor(max)
+	min, max = floor(min), floor(max)
 
-    -- Handle the case where min is greater than max
-    if min > max then
-        min, max = max, min
-    end
+	-- Handle the case where min is greater than max
+	if min > max then
+		min, max = max, min
+	end
 
-    -- Generate and return the random integer
-    return math.random(min, max)
+	-- Generate and return the random integer
+	return math.random(min, max)
 end
 
 -- Function to generate a random float in the range [min, max]
 function rndf(min, max)
 	if min == 0 and max == 0 then return 0 end
-    -- Handle the case where min is greater than max
-    if min > max then
-        min, max = max, min
-    end
+	-- Handle the case where min is greater than max
+	if min > max then
+		min, max = max, min
+	end
 
-    -- Generate and return the random float
-    return min + math.random() * (max - min)
+	-- Generate and return the random float
+	return min + math.random() * (max - min)
 end
-
 
 function rspr(id, x, y, colorkey, scaleX, scaleY, flip, rotate, tile_width, tile_height, pivot, skip)
 	colorkey = colorkey or -1
@@ -2666,9 +2684,9 @@ function rspr(id, x, y, colorkey, scaleX, scaleY, flip, rotate, tile_width, tile
 	flip = flip or 0
 	rotate = rotate or 0
 	tile_width = tile_width or 1
-	tile_height =	tile_height or 1
+	tile_height = tile_height or 1
 	pivot = pivot or vec2(4, 4)
-	skip = skip or {false, false}
+	skip = skip or { false, false }
 
 	-- Draw a sprite using two textured triangles.
 	-- Apply affine transformations: scale, shear, rotate, flip
@@ -2708,9 +2726,10 @@ function rspr(id, x, y, colorkey, scaleX, scaleY, flip, rotate, tile_width, tile
 	end
 
 	local rx1, ry1 = rot(ox + shx1, oy + shy1, pivot.x, pivot.y)
-	local rx2, ry2 = rot((( tile_width * 8) * scaleX) + ox + shx1, oy + shy2, pivot.x, pivot.y)
+	local rx2, ry2 = rot(((tile_width * 8) * scaleX) + ox + shx1, oy + shy2, pivot.x, pivot.y)
 	local rx3, ry3 = rot(ox + shx2, ((tile_height * 8) * scaleY) + oy + shy1, pivot.x, pivot.y)
-	local rx4, ry4 = rot((( tile_width * 8) * scaleX) + ox + shx2, ((tile_height * 8) * scaleY) + oy + shy2, pivot.x, pivot.y)
+	local rx4, ry4 = rot(((tile_width * 8) * scaleX) + ox + shx2, ((tile_height * 8) * scaleY) + oy + shy2, pivot.x,
+		pivot.y)
 
 	local x1 = x + rx1 - pivot.x
 	local y1 = y + ry1 - pivot.y
@@ -2734,7 +2753,6 @@ function rspr(id, x, y, colorkey, scaleX, scaleY, flip, rotate, tile_width, tile
 	end
 end
 
-
 function get_subtile_position(point)
 	point.x = floor(point.x)
 	point.y = floor(point.y)
@@ -2749,63 +2767,58 @@ function get_subtile_position(point)
 	--local sub_x, sub_y = math.floor(116-local_x), math.floor(64-local_y)
 end
 
-
 function BOOT()
 	--poke(0x3FF8, 8)
 end
 
-
 function update_sync()
 	local pages = {
-		[0]  = {bank = 0, mask = 1},
-		[1]  = {bank = 0, mask = 2},
-		[2]  = {bank = 1, mask = 1},
-		[3]  = {bank = 1, mask = 2},
-		[4]  = {bank = 2, mask = 1},
-		[5]  = {bank = 2, mask = 2},
-		[6]  = {bank = 3, mask = 1},
-		[7]  = {bank = 3, mask = 2},
-		[8]  = {bank = 4, mask = 1},
-		[9]  = {bank = 4, mask = 2},
-		[10] = {bank = 5, mask = 1},
-		[11] = {bank = 5, mask = 2},
-		[12] = {bank = 6, mask = 1},
-		[13] = {bank = 6, mask = 2},
-		[14] = {bank = 7, mask = 1},
-		[15] = {bank = 7, mask = 2},
+		[0]  = { bank = 0, mask = 1 },
+		[1]  = { bank = 0, mask = 2 },
+		[2]  = { bank = 1, mask = 1 },
+		[3]  = { bank = 1, mask = 2 },
+		[4]  = { bank = 2, mask = 1 },
+		[5]  = { bank = 2, mask = 2 },
+		[6]  = { bank = 3, mask = 1 },
+		[7]  = { bank = 3, mask = 2 },
+		[8]  = { bank = 4, mask = 1 },
+		[9]  = { bank = 4, mask = 2 },
+		[10] = { bank = 5, mask = 1 },
+		[11] = { bank = 5, mask = 2 },
+		[12] = { bank = 6, mask = 1 },
+		[13] = { bank = 6, mask = 2 },
+		[14] = { bank = 7, mask = 1 },
+		[15] = { bank = 7, mask = 2 },
 	}
 	sync(pages[SPRITE_PAGE].mask, pages[SPRITE_PAGE].bank, false)
 end
 
-
 function draw_sprite_window(x, y)
 	rect(x, y, 128, 128, 8)
-	spr(SPRITE_PAGE*256, x, y, 0, 1, 0, 0, 16, 16)
+	spr(SPRITE_PAGE * 256, x, y, 0, 1, 0, 0, 16, 16)
 	--rectb(x-1, y-1, 130, 130, 15)
 end
-
 
 function draw_sprite_grid(w, h, position, color)
 	--if not SHOW_GRID then return end
 	local sub_x, sub_y = position.x % 8, position.y % 8
-	local rows, cols = h//8 + 1, w//8 + 1
-	
+	local rows, cols = h // 8 + 1, w // 8 + 1
+
 	for row = 1, rows do
 		for col = 1, cols do
-			pal({15, color})
+			pal({ 15, color })
 			--spr(GRID, position.x + -sub_x + (col-1) * 8, position.y + -sub_y + (row - 1) * 8 - 4, 0)
-			spr(GRID, position.x + (col-1) * 8, position.y + (row - 1) * 8, 0)
+			spr(GRID, position.x + (col - 1) * 8, position.y + (row - 1) * 8, 0)
 		end
 	end
 	pal()
-	
+
 	-- if SHOW_AXIS then
 	-- 	local center_x, center_y = world_to_screen(0, 0)
 	-- 	line(center_x - 10000, center_y, center_x + 10000, center_y, 12)
 	-- 	line(center_x, center_y - 10000, center_x, center_y + 10000, 3)
 	-- end
 end
-
 
 function update_text_buffer(callback, max_size)
 	max_size = max_size or math.huge
@@ -2874,18 +2887,16 @@ function update_text_buffer(callback, max_size)
 	if keyp(50) or keyp(93) then
 		callback()
 	end
-
 end
-
 
 function draw_text_buffer(pos, size, color, callback)
 	rect(pos.x, pos.y, size.w, size.h, color.bg)
 	rectb(pos.x, pos.y, size.w, size.h, color.fg)
 	rect(pos.x + text_width(TEXT_BUFFER, true) + 2, pos.y + 2, 1, 5, TICK % 60 > 30 and 15 or 0)
-	prints(TEXT_BUFFER, pos.x + 2, pos.y + 2, 8, 2, {x = 1, y = 0}, true)
-	prints("Press ENTER to accept", size.w/2 - text_width("Press ENTER to accept", true)/2, pos.y + 12, 8, TICK % 60 > 30 and 13 or 15, {x = 1, y = 0}, true)
+	prints(TEXT_BUFFER, pos.x + 2, pos.y + 2, 8, 2, { x = 1, y = 0 }, true)
+	prints("Press ENTER to accept", size.w / 2 - text_width("Press ENTER to accept", true) / 2, pos.y + 12, 8,
+		TICK % 60 > 30 and 13 or 15, { x = 1, y = 0 }, true)
 end
-
 
 function draw_main_menu(dt)
 	update_cursor_state()
@@ -2899,11 +2910,11 @@ function draw_main_menu(dt)
 
 	HOVER_TEXT = ''
 	local items = {}
-	items[1] = {x = 120 - 25, y = 73, w = 50, h = 10}
-	items[2] = {x = 120 - 25, y = 89, w = 50, h = 10}
+	items[1] = { x = 120 - 25, y = 73, w = 50, h = 10 }
+	items[2] = { x = 120 - 25, y = 89, w = 50, h = 10 }
 	--items[3] = {x = 120 - (text_width("sETTINGS", true)/2), y = 93, w = text_width("sETTINGS", true) + 4, h = 10}
 
-	local offset = remap(sin(TICK/2%30/25), 0, 1, -5, 5)
+	local offset = remap(sin(TICK / 2 % 30 / 25), 0, 1, -5, 5)
 	local padding_left, padding_right = 10, 2
 	--offset = 1
 	--printo(offset, 1, 136 - 8, 0, 2, true)
@@ -2913,23 +2924,23 @@ function draw_main_menu(dt)
 		end
 	end
 	local el = items[LAST_HOVERED_MENU_ITEM]
-	pal({1, 0, 15, 2, 4, 8})
+	pal({ 1, 0, 15, 2, 4, 8 })
 	spr(BUTTON_ARROW_UP_SMALL, el.x - padding_left - abs(offset) + 2, el.y - 1, 0, 1, 0, 2)
 	spr(BUTTON_ARROW_UP_SMALL, el.x + el.w + padding_right + abs(offset), el.y, 0, 1, 0, 0)
 	pal()
 	local new_particle_text = "  New  "
-	if ui.draw_text_button(120 - (text_width(new_particle_text, true)/2), 73, BUTTON_TEXT, text_width(new_particle_text, true) + 4, 8, 12, 8, 1, {text = new_particle_text, x = 2, y = 1, bg = 0, fg = 15, shadow = {x = 1, y = 0}}, false, true) then
+	if ui.draw_text_button(120 - (text_width(new_particle_text, true) / 2), 73, BUTTON_TEXT, text_width(new_particle_text, true) + 4, 8, 12, 8, 1, { text = new_particle_text, x = 2, y = 1, bg = 0, fg = 15, shadow = { x = 1, y = 0 } }, false, true) then
 		--trace("clicked new")
 		STATE = 'edit'
 		set_emitter_main()
 		EMITTER = EMITTER_DEFAULT
-		EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH/2), grid.y + (GRID_HEIGHT/2))
+		EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH / 2), grid.y + (GRID_HEIGHT / 2))
 		EDIT_STATE = 'emitter'
 		return
 	end
 
 	local load_preset_text = "  Load  "
-	if ui.draw_text_button(120 - (text_width(load_preset_text, true)/2), 89, BUTTON_TEXT, text_width(load_preset_text, true) + 4, 8, 7, 8, 5, {text = load_preset_text, x = 2, y = 1, bg = 8, fg = 15, shadow = {x = 1, y = 0}}, false, true) then
+	if ui.draw_text_button(120 - (text_width(load_preset_text, true) / 2), 89, BUTTON_TEXT, text_width(load_preset_text, true) + 4, 8, 7, 8, 5, { text = load_preset_text, x = 2, y = 1, bg = 8, fg = 15, shadow = { x = 1, y = 0 } }, false, true) then
 		STATE = 'load'
 		set_emitter_preview()
 		--trace('clicked load preset button')
@@ -2946,8 +2957,8 @@ function draw_main_menu(dt)
 	draw_header_overlay()
 
 	if ui.draw_button(240 - 6, 0, 0, BUTTON_MENU, 15, 8, 6, function()
-		HOVER_TEXT = "Editor Settings"
-	end, {x = -1, y = -1, w = 7, h = 7}) then
+			HOVER_TEXT = "Editor Settings"
+		end, { x = -1, y = -1, w = 7, h = 7 }) then
 		LAST_STATE = STATE
 		STATE = 'settings'
 		--trace("clicked editor settings button")
@@ -2963,20 +2974,17 @@ function draw_main_menu(dt)
 	-- end
 end
 
-
 function draw_header_overlay()
 	rect(0, 0, 240, 8, 7)
 	local button_color = 12
 	local button_highlight = 2
 	local button_hover = 5
 
-	prints("Particle Forge", 120 - (text_width("Particle Forge", false)/2), 1, 8, 2, {x = 1, y = 1}, false)
-
+	prints("Particle Forge", 120 - (text_width("Particle Forge", false) / 2), 1, 8, 2, { x = 1, y = 1 }, false)
 end
 
-
 function draw_particle_preview_window_simulation(x, y, w, h, bounds, dt)
-	local grid_hovered = hovered(cursor, {x = bounds.x, y = bounds.y, w = bounds.w, h = bounds.h})
+	local grid_hovered = hovered(cursor, { x = bounds.x, y = bounds.y, w = bounds.w, h = bounds.h })
 	local particle_emitter = TEMP_EMITTER
 	--update_cursor_state()
 	--update_particles(dt)
@@ -3091,7 +3099,8 @@ function draw_particle_preview_window_simulation(x, y, w, h, bounds, dt)
 	if grid_hovered then
 		--circb(clamp(EMITTER_POSITION.x, bounds.x + padding, bounds.x + bounds.w - padding), clamp(EMITTER_POSITION.y, bounds.y + padding, bounds.y + bounds.h - padding), 5, 14)
 		if cursor.held_left then
-			EMITTER_POSITION = vec2(clamp(cursor.x, bounds.x + padding, bounds.x + bounds.w - padding), clamp(cursor.y, bounds.y + padding, bounds.y + bounds.h - padding + 2))
+			EMITTER_POSITION = vec2(clamp(cursor.x, bounds.x + padding, bounds.x + bounds.w - padding),
+				clamp(cursor.y, bounds.y + padding, bounds.y + bounds.h - padding + 2))
 		end
 	end
 
@@ -3103,28 +3112,26 @@ function draw_particle_preview_window_simulation(x, y, w, h, bounds, dt)
 		-- prints("C2: " .. CURRENT_COLOR_2, 1 + 18, 136 - 7, 8, 2, {x = 1, y = 1}, true)
 		local total = TOTAL_PARTICLES_FG + TOTAL_PARTICLES_BG
 		local bg, fg = TOTAL_PARTICLES_BG, TOTAL_PARTICLES_FG
-		local fps = floor(1000/dt)
-		prints("FPS:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(LAST_FPS, x + text_width("FPS:", true), y, 8, fps > 50 and 3 or 12, {x = 1, y = 1}, true)
+		local fps = floor(1000 / dt)
+		prints("FPS:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(LAST_FPS, x + text_width("FPS:", true), y, 8, fps > 50 and 3 or 12, { x = 1, y = 1 }, true)
 		y = y + 8
 		-- prints("DLT:", x, y, 8, 2, {x = 1, y = 1}, true)
 		-- prints(string.format('%.2f', dt), x + text_width("FPS:", true), y, 8, tonumber(string.format('%.2f', dt)) > 18 and 12 or 3, {x = 1, y = 1}, true)
 		-- y = y + 8
-		prints("Total:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(total, x + text_width("Total:", true), y, 8, total < 100 and 3 or 12, {x = 1, y = 1}, true)
+		prints("Total:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(total, x + text_width("Total:", true), y, 8, total < 100 and 3 or 12, { x = 1, y = 1 }, true)
 		y = y + 8
-		prints("FG:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(fg, x + text_width("FG:", true), y, 8, 15, {x = 1, y = 1}, true)
+		prints("FG:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(fg, x + text_width("FG:", true), y, 8, 15, { x = 1, y = 1 }, true)
 		y = y + 8
-		prints("BG:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(bg, x + text_width("BG:", true), y, 8, 14, {x = 1, y = 1}, true)
+		prints("BG:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(bg, x + text_width("BG:", true), y, 8, 14, { x = 1, y = 1 }, true)
 	end
-
 end
 
-
 function draw_particle_preview_window(dt)
-	local grid_hovered = hovered(cursor, {x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT})
+	local grid_hovered = hovered(cursor, { x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT })
 	--update_cursor_state()
 	--update_particles(dt)
 
@@ -3219,7 +3226,8 @@ function draw_particle_preview_window(dt)
 	if EDIT_STATE ~= 'select_sprite' and grid_hovered then
 		--circb(clamp(EMITTER_POSITION.x, grid.x + padding, grid.x + GRID_WIDTH - padding), clamp(EMITTER_POSITION.y, grid.y + padding, grid.y + GRID_HEIGHT - padding), 5, 14)
 		if cursor.held_left then
-			EMITTER_POSITION = vec2(clamp(cursor.x, grid.x + padding, grid.x + GRID_WIDTH - padding), clamp(cursor.y, grid.y + padding, grid.y + GRID_HEIGHT - padding))
+			EMITTER_POSITION = vec2(clamp(cursor.x, grid.x + padding, grid.x + GRID_WIDTH - padding),
+				clamp(cursor.y, grid.y + padding, grid.y + GRID_HEIGHT - padding))
 		end
 	end
 
@@ -3231,22 +3239,21 @@ function draw_particle_preview_window(dt)
 		-- prints("C2: " .. CURRENT_COLOR_2, 1 + 18, 136 - 7, 8, 2, {x = 1, y = 1}, true)
 		local total = TOTAL_PARTICLES_FG + TOTAL_PARTICLES_BG
 		local bg, fg = TOTAL_PARTICLES_BG, TOTAL_PARTICLES_FG
-		local fps = floor(1000/dt)
-		prints("FPS:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(LAST_FPS, x + text_width("FPS:", true), y, 8, fps > 50 and 3 or 12, {x = 1, y = 1}, true)
+		local fps = floor(1000 / dt)
+		prints("FPS:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(LAST_FPS, x + text_width("FPS:", true), y, 8, fps > 50 and 3 or 12, { x = 1, y = 1 }, true)
 		y = y + 8
-		prints("Total:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(total, x + text_width("Total:", true), y, 8, total < 100 and 3 or 12, {x = 1, y = 1}, true)
+		prints("Total:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(total, x + text_width("Total:", true), y, 8, total < 100 and 3 or 12, { x = 1, y = 1 }, true)
 		y = y + 8
-		prints("FG:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(fg, x + text_width("FG:", true), y, 8, 15, {x = 1, y = 1}, true)
+		prints("FG:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(fg, x + text_width("FG:", true), y, 8, 15, { x = 1, y = 1 }, true)
 		y = y + 8
-		prints("BG:", x, y, 8, 2, {x = 1, y = 1}, true)
-		prints(bg, x + text_width("BG:", true), y, 8, 14, {x = 1, y = 1}, true)
+		prints("BG:", x, y, 8, 2, { x = 1, y = 1 }, true)
+		prints(bg, x + text_width("BG:", true), y, 8, 14, { x = 1, y = 1 }, true)
 	end
 	--rectb({x=113,y=10,w=126,h=125}, 2)
 end
-
 
 function trim_text(text, length, font_size, padding_width)
 	padding_width = padding_width or 0
@@ -3257,13 +3264,12 @@ function trim_text(text, length, font_size, padding_width)
 			new_text = string.sub(new_text, 1, #new_text - 1)
 			width = text_width(new_text, font_size)
 		end
-		
+
 		if padding_width > 0 then new_text = new_text .. string.rep('', padding_width, '.') end
 	end
 
 	return new_text
 end
-
 
 function draw_emitter_particle_widget(particle_system, pos, index)
 	index = index or CURRENT_PARTICLE
@@ -3272,8 +3278,8 @@ function draw_emitter_particle_widget(particle_system, pos, index)
 
 	local w, h = 240 - GRID_WIDTH - 2, 11
 	local x, y = pos.x, pos.y
-	local hov = hovered(cursor, {x = x + 7, y = y + 1, w = w - 19, h = h - 2})
-	local bounds_hovered = hovered(cursor, {x = 0, y = 9, w = grid.x - 1, h = 136 - AUTO_SCROLL_WIDGET_HEIGHT})
+	local hov = hovered(cursor, { x = x + 7, y = y + 1, w = w - 19, h = h - 2 })
+	local bounds_hovered = hovered(cursor, { x = 0, y = 9, w = grid.x - 1, h = 136 - AUTO_SCROLL_WIDGET_HEIGHT })
 	if not hov then
 		vbank(0)
 		rect(x, y, w, h, 7)
@@ -3300,8 +3306,8 @@ function draw_emitter_particle_widget(particle_system, pos, index)
 	end
 
 	if ui.draw_button(grid.x - 11, y + 5, 0, BUTTON_EDIT, bounds_hovered and 15 or 14, 8, 2, function()
-		HOVER_TEXT = "Rename particle"
-	end, {x = 0, y = 1, w = 5, h = 5}) then
+			HOVER_TEXT = "Rename particle"
+		end, { x = 0, y = 1, w = 5, h = 5 }) then
 		cursor.cooldown = 30
 		TEXT_BUFFER = EMITTER.particle_systems[index].name
 		EDIT_STATE = 'edit_particle_name'
@@ -3312,9 +3318,8 @@ function draw_emitter_particle_widget(particle_system, pos, index)
 	local vis = particle_system.visibility
 
 	if ui.draw_button(grid.x - 12, y, 0, BUTTON_INVISIBILITY, vis and 15 or 13, 8, 6, not vis and function()
-		HOVER_TEXT = "Show - SHIFT + CLICK to isolate"
-	end or function() HOVER_TEXT = "Hide - SHIFT + CLICK to isolate" end, {x = 1, y = 0, w = 5, h = 6}) then
-
+			HOVER_TEXT = "Show - SHIFT + CLICK to isolate"
+		end or function() HOVER_TEXT = "Hide - SHIFT + CLICK to isolate" end, { x = 1, y = 0, w = 5, h = 6 }) then
 		if key(64) then
 			if not vis then
 				for k, v in ipairs(EMITTER.particle_systems) do
@@ -3330,48 +3335,49 @@ function draw_emitter_particle_widget(particle_system, pos, index)
 		else
 			particle_system.visibility = not vis
 		end
-		
+
 		cursor.cooldown = 15
 		--trace("Clicked toggle Visibility button")
 	end
 
 
 	if ui.draw_button(1, y + 1, 0, BUTTON_CLOSE_SMALL, bounds_hovered and 15 or 14, 8, 12, function()
-		HOVER_TEXT = "Delete particle"
-	end, {x = -1, y = -1, w = 5, h = 5}) then
+			HOVER_TEXT = "Delete particle"
+		end, { x = -1, y = -1, w = 5, h = 5 }) then
 		cursor.cooldown = 30
 		particle_system.kill = true
 		--trace("Clicked delete particle button")
 	end
 
 	if ui.draw_button(1, y + 7, 0, BUTTON_CLONE_SMALL, bounds_hovered and 15 or 14, 8, 9, function()
-		HOVER_TEXT = "Clone particle"
-	end, {x = -1, y = -1, w = 5, h = 5}) then
+			HOVER_TEXT = "Clone particle"
+		end, { x = -1, y = -1, w = 5, h = 5 }) then
 		cursor.cooldown = 30
 		EMITTER.particle_systems[index].settings.clones = EMITTER.particle_systems[index].settings.clones + 1
 		local new_particle_system = deep_copy(EMITTER.particle_systems[index])
-		new_particle_system.name = trim_text(new_particle_system.name .. "_" .. EMITTER.particle_systems[index].settings.clones, PARTICLE_NAME_MAX_WIDTH, true, 3)
+		new_particle_system.name = trim_text(
+		new_particle_system.name .. "_" .. EMITTER.particle_systems[index].settings.clones, PARTICLE_NAME_MAX_WIDTH, true,
+			3)
 		table.insert(EMITTER.particle_systems, index + 1, new_particle_system)
 		--trace("Clicked CLONE particle button")
 	end
 
 	if ui.draw_button(x + w - 6, y - 1, 0, BUTTON_ARROW_RIGHT_SMALL, bounds_hovered and 15 or 14, 8, 3, function()
-		HOVER_TEXT = "Move up"
-	end, {x = 1, y = -1, w = 5, h = 5}, false, 3) and index > 1 then
+			HOVER_TEXT = "Move up"
+		end, { x = 1, y = -1, w = 5, h = 5 }, false, 3) and index > 1 then
 		cursor.cooldown = 30
 		swap(EMITTER.particle_systems, index, index - 1)
 		--trace("Clicked move up button")
 	end
 
 	if ui.draw_button(x + w - 7, y + 3, 0, BUTTON_ARROW_RIGHT_SMALL, bounds_hovered and 15 or 14, 8, 12, function()
-		HOVER_TEXT = "Move down"
-	end, {x = 2, y = 2, w = 5, h = 5}, false, 1) and #EMITTER.particle_systems > 1 and index < #EMITTER.particle_systems then
+			HOVER_TEXT = "Move down"
+		end, { x = 2, y = 2, w = 5, h = 5 }, false, 1) and #EMITTER.particle_systems > 1 and index < #EMITTER.particle_systems then
 		cursor.cooldown = 30
 		swap(EMITTER.particle_systems, index, index + 1)
 		--trace("Clicked move down button")
 	end
 end
-
 
 function draw_particle_settings_list()
 	local h = 9
@@ -3380,27 +3386,27 @@ function draw_particle_settings_list()
 
 	--DRAW HEADER, NAME, UI & BUTTONS
 	local text = EMITTER.particle_systems[CURRENT_PARTICLE].name
-	local x, y = 120 - text_width(text, false)/2, 1
-	prints(text, x, y, 8, 2, {x = 1, y = 1}, false)
+	local x, y = 120 - text_width(text, false) / 2, 1
+	prints(text, x, y, 8, 2, { x = 1, y = 1 }, false)
 	--BACK BUTTON
 	if ui.draw_button(2, 0, 1, BUTTON_ARROW_RIGHT, 12, 2, 1, function()
-		HOVER_TEXT = "Back"
-	end) then
+			HOVER_TEXT = "Back"
+		end) then
 		CURRENT_PARTICLE_SETTING_PAGE = 1
 		EDIT_STATE = 'emitter'
 		--trace('edit state set to \'emitter\'')
 	end
 	--JUMP TO BOTTOM OF THE LIST
 	if ui.draw_button(15, 0, 0, BUTTON_ARROW_DOWN, 15, 8, 1, function()
-		HOVER_TEXT = "Jump to bottom"
-	end) then
+			HOVER_TEXT = "Jump to bottom"
+		end) then
 		PARTICLE_SETTING_SCROLL_POS = max_scroll_pos
 		--trace('clicked jump to bottom of scroll')
 	end
 	--JUMP TO THE TOP OF THE LIST
 	if ui.draw_button(25, 0, 0, BUTTON_ARROW_UP, 15, 8, 1, function()
-		HOVER_TEXT = "Jump to top"
-	end) then
+			HOVER_TEXT = "Jump to top"
+		end) then
 		PARTICLE_SETTING_SCROLL_POS = 0
 		--trace('clicked jump to top of scroll')
 	end
@@ -3416,13 +3422,15 @@ function draw_particle_settings_list()
 		--trace('clicked toggle axis button')
 	end
 	--PERFORMANCE INDICATOR TOGGLE
-	if ui.draw_button(240 - 28, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Debug" end, false) then
+	if ui.draw_button(240 - 28, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT =
+			"Toggle Debug" end, false) then
 		SHOW_DEBUG = not SHOW_DEBUG
 		cursor.cooldown = 30
 		--trace('clicked toggle debug button')
 	end
 	--SHOW PARTICLE BOUNDS TOGGLE
-	if ui.draw_button(240 - 35, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Particle Bounds" end, false) then
+	if ui.draw_button(240 - 35, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT =
+			"Toggle Particle Bounds" end, false) then
 		SHOW_PARTICLE_BOUNDS = not SHOW_PARTICLE_BOUNDS
 		cursor.cooldown = 30
 		--trace('clicked toggle particle bounds button')
@@ -3444,7 +3452,7 @@ function draw_particle_settings_list()
 			--CHECK IF HOVERED TOP AUTO-SCROLL TAB
 			if AUTO_SCROLL_SHOW_HOVER_BARS then draw_auto_scroll_widget(true, AUTO_SCROLL_WIDGET_HEIGHT) end
 			--rectb(0, 8, grid.x, h, 2)
-			if hovered(cursor, {x = 0, y = 9, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT}) then
+			if hovered(cursor, { x = 0, y = 9, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT }) then
 				was_scrolled = true
 				PARTICLE_SETTING_SCROLL_POS = clamp(PARTICLE_SETTING_SCROLL_POS - AUTO_SCROLL_SPEED, 0, max_scroll_pos)
 			end
@@ -3453,7 +3461,7 @@ function draw_particle_settings_list()
 			--CHECK IF HOVERED BOTTOM AUTO-SCROLL TAB
 			if AUTO_SCROLL_SHOW_HOVER_BARS then draw_auto_scroll_widget(false, AUTO_SCROLL_WIDGET_HEIGHT) end
 			--rectb(0, 135 - h, grid.x, h, 2)
-			if hovered(cursor, {x = 0, y = 136 - AUTO_SCROLL_WIDGET_HEIGHT, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT}) then
+			if hovered(cursor, { x = 0, y = 136 - AUTO_SCROLL_WIDGET_HEIGHT, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT }) then
 				was_scrolled = true
 				PARTICLE_SETTING_SCROLL_POS = clamp(PARTICLE_SETTING_SCROLL_POS + AUTO_SCROLL_SPEED, 0, max_scroll_pos)
 			end
@@ -3467,8 +3475,9 @@ function draw_particle_settings_list()
 			if key(64) then
 				PARTICLE_SETTING_SCROLL_POS = clamp(cursor.sy > 0 and 0 or max_scroll_pos, 0, max_scroll_pos)
 			else
-			--OR USE MOUSE SCROLL
-				PARTICLE_SETTING_SCROLL_POS = clamp(PARTICLE_SETTING_SCROLL_POS - cursor.sy + (cursor.lsy*(spacing/2)), 0, max_scroll_pos)
+				--OR USE MOUSE SCROLL
+				PARTICLE_SETTING_SCROLL_POS = clamp(PARTICLE_SETTING_SCROLL_POS - cursor.sy + (cursor.lsy * (spacing / 2)),
+					0, max_scroll_pos)
 			end
 		end
 	end
@@ -3477,15 +3486,14 @@ function draw_particle_settings_list()
 	--prints("max scroll pos: " .. max_scroll_pos, grid.x + 2, 18, 8, 2, {x = 1, y = 0}, true)
 end
 
-
 function draw_particle_setting_widget(pos, i, height)
 	local p_settings = EMITTER.particle_systems[CURRENT_PARTICLE].settings
 	if not p_settings[i] then return end
 	local v = p_settings[i]
 	local x, y, w = pos.x, pos.y, grid.x - 1
-	local value_bounds = {x = 57, y = pos.y, w = grid.x - 65, h = 8}
-	local name_bounds = {x = 1, y = pos.y, w = 55, h = 7}
-	local bounds_hovered = hovered(cursor, {x = 0, y = 9, w = grid.x - 1, h = 136 - AUTO_SCROLL_WIDGET_HEIGHT})
+	local value_bounds = { x = 57, y = pos.y, w = grid.x - 65, h = 8 }
+	local name_bounds = { x = 1, y = pos.y, w = 55, h = 7 }
+	local bounds_hovered = hovered(cursor, { x = 0, y = 9, w = grid.x - 1, h = 136 - AUTO_SCROLL_WIDGET_HEIGHT })
 
 	--DRAW WIDGET PRIMITIVES
 	vbank(0)
@@ -3504,7 +3512,7 @@ function draw_particle_setting_widget(pos, i, height)
 	else
 		rect(x, y, 57, 7, 7)
 	end
-	prints(v.name .. ":", pos.x + 2, pos.y + 1, 8, 15, {x = 1, y = 0}, true)
+	prints(v.name .. ":", pos.x + 2, pos.y + 1, 8, 15, { x = 1, y = 0 }, true)
 
 	if bounds_hovered and hovered(cursor, value_bounds) then
 		if v:get() == 'Sprite' then
@@ -3512,7 +3520,7 @@ function draw_particle_setting_widget(pos, i, height)
 		elseif v.name ~= 'Particle Type' then
 			HOVER_TEXT = "Click to enter value"
 		end
-		rect({x = 57, y = pos.y, w = grid.x - 65, h = 7}, 6)
+		rect({ x = 57, y = pos.y, w = grid.x - 65, h = 7 }, 6)
 		if v:get() ~= "Shape" and cursor.released_left and p_settings[i].click then
 			if key(63) then
 				trace('grabbing slider')
@@ -3522,23 +3530,22 @@ function draw_particle_setting_widget(pos, i, height)
 		end
 	end
 
-	prints(tostring(v:get()), 80 - text_width(tostring(v:get()), true)/2 + 1, pos.y + 1, 8, 15, {x = 1, y = 0}, true)
+	prints(tostring(v:get()), 80 - text_width(tostring(v:get()), true) / 2 + 1, pos.y + 1, 8, 15, { x = 1, y = 0 }, true)
 
 	local inc = not key(64) and v.increment or 5 * v.increment
 
 	if ui.draw_button(x + w - 6, y - 2, 0, BUTTON_ARROW_RIGHT_SMALL, bounds_hovered and 15 or 14, 8, 3, bounds_hovered and function()
-		HOVER_TEXT = "+" .. tostring(inc)
-	end, {x = 1, y = 1, w = 5, h = 4}, not bounds_hovered, 3) and bounds_hovered then
+			HOVER_TEXT = "+" .. tostring(inc)
+		end, { x = 1, y = 1, w = 5, h = 4 }, not bounds_hovered, 3) and bounds_hovered then
 		v:set(v.val + inc)
 	end
 
 	if ui.draw_button(x + w - 7, y + 1, 0, BUTTON_ARROW_UP_SMALL, bounds_hovered and 15 or 14, 8, 12, bounds_hovered and function()
-		HOVER_TEXT = "-" .. tostring(inc)
-	end, {x = 2, y = 3, w = 5, h = 4}, not bounds_hovered, 1) and bounds_hovered then
+			HOVER_TEXT = "-" .. tostring(inc)
+		end, { x = 2, y = 3, w = 5, h = 4 }, not bounds_hovered, 1) and bounds_hovered then
 		v:set(v.val - inc)
 	end
 end
-
 
 function draw_auto_scroll_widget(direction, height)
 	if direction then
@@ -3547,17 +3554,18 @@ function draw_auto_scroll_widget(direction, height)
 		--rect(0, 9, grid.x, height - 2, color)
 		rect(0, 9, grid.x - 1, height, color)
 		--rectb(2 + grid.x / 2 - 2, 10, 2, 2, 12)
-		prints("Hover to scroll Up", grid.x/2 - text_width("Hover to scroll UP", true)/2, 10, 0, 15, {x = 1, y = 0}, true)
+		prints("Hover to scroll Up", grid.x / 2 - text_width("Hover to scroll UP", true) / 2, 10, 0, 15, { x = 1, y = 0 },
+			true)
 	else
 		local color, border = 12, 12
 		--rectb(1, 135 - height - 1, grid.x - 2, height, border)
 		--rect(0, 135 - height, grid.x, height - 2, color)
 		rect(0, 136 - height, grid.x - 1, height, color)
 		--rectb(2 + grid.x / 2 - 4, 135 - height + 2, 2, 2, 12)
-		prints("Hover to scroll Down", grid.x/2 - text_width("Hover to scroll Down", true)/2, 136 - height + 2, 0, 15, {x = 1, y = 0}, true)
+		prints("Hover to scroll Down", grid.x / 2 - text_width("Hover to scroll Down", true) / 2, 136 - height + 2, 0, 15,
+			{ x = 1, y = 0 }, true)
 	end
 end
-
 
 function exportOLD()
 	local emitter_str = '{name=\'' .. EMITTER.name .. '\','
@@ -3572,14 +3580,13 @@ function exportOLD()
 	trace(emitter_str)
 end
 
-
 function export()
 	local x, y, w, h = EMITTER.bounds.x, EMITTER.bounds.y, EMITTER.bounds.w, EMITTER.bounds.h
 	local emitter_str = '-----------------------------BEGIN EXPORT------------------------------<\n\n'
 	emitter_str = emitter_str .. '[' .. #EMITTER_PRESET + 1 .. '] = {' .. '\n'
 	emitter_str = emitter_str .. '    name=\'' .. EMITTER.name .. '\',\n'
 	emitter_str = emitter_str .. '    position = vec2(120,68),\n'
-	emitter_str = emitter_str .. '    bounds = {' .. 'x='.. x .. ',y=' .. y .. ',w=' .. w .. ',h=' .. h ..'},\n'
+	emitter_str = emitter_str .. '    bounds = {' .. 'x=' .. x .. ',y=' .. y .. ',w=' .. w .. ',h=' .. h .. '},\n'
 	emitter_str = emitter_str .. '    particle_systems = {\n'
 	for k, v in ipairs(EMITTER.particle_systems) do
 		local sprite = v.settings.sprite
@@ -3596,23 +3603,24 @@ function export()
 	trace(emitter_str)
 end
 
-
 function update_edit_state(dt)
 	update_cursor_state()
 
 	draw_particle_preview_window(dt)
 
 	if EDIT_STATE == 'emitter' then
-		local x, y = 120 - text_width(EMITTER.name, false)/2, 1
+		local x, y = 120 - text_width(EMITTER.name, false) / 2, 1
 		local w, h = 240 - GRID_WIDTH - 1, 11
-		local name_bounds = {x = x - 1, y = y - 1, w = text_width(EMITTER.name, false) + 1, h = 8}
+		local name_bounds = { x = x - 1, y = y - 1, w = text_width(EMITTER.name, false) + 1, h = 8 }
 		local spacing = h + 1
 
-		local max_scroll_pos = #EMITTER.particle_systems <= EMITTER_WIDGETS_PER_PAGE and 0 or #EMITTER.particle_systems * (h + 1) - (126) - 2
+		local max_scroll_pos = #EMITTER.particle_systems <= EMITTER_WIDGETS_PER_PAGE and 0 or
+		#EMITTER.particle_systems * (h + 1) - (126) - 2
 		local was_scrolled = false
 
 		if not was_scrolled then
-			if abs(cursor.sy) > 0 then EMITTER_SCROLL_POS = clamp(EMITTER_SCROLL_POS + cursor.sy + (cursor.lsy*(spacing/2)), 0, max_scroll_pos) end
+			if abs(cursor.sy) > 0 then EMITTER_SCROLL_POS = clamp(
+				EMITTER_SCROLL_POS + cursor.sy + (cursor.lsy * (spacing / 2)), 0, max_scroll_pos) end
 		end
 
 		if hovered(cursor, name_bounds) then
@@ -3624,52 +3632,56 @@ function update_edit_state(dt)
 			end
 		end
 
-		prints(EMITTER.name, x, y, 8, 2, {x = 1, y = 1}, false)
+		prints(EMITTER.name, x, y, 8, 2, { x = 1, y = 1 }, false)
 
 
 		if ui.draw_button(240 - 6, 0, 0, BUTTON_MENU, 15, 8, 6, function()
-			HOVER_TEXT = "Editor Settings"
-		end, {x = -1, y = -1, w = 7, h = 7}) then
+				HOVER_TEXT = "Editor Settings"
+			end, { x = -1, y = -1, w = 7, h = 7 }) then
 			LAST_STATE = STATE
 			STATE = 'settings'
 			--trace("clicked editor settings button")
 		end
 
 		if ui.draw_button(240 - 15, 0, 0, BUTTON_EXPORT, 12, 8, 6, function()
-			HOVER_TEXT = "Export Particle System"
-		end, {x = -1, y = -1, w = 7, h = 7}) then
+				HOVER_TEXT = "Export Particle System"
+			end, { x = -1, y = -1, w = 7, h = 7 }) then
 			cursor.cooldown = 30
 			export()
 			--trace("clicked export button")
 		end
 
-		if ui.draw_button(240 - 22, 0, 0, BUTTON_GRID, SHOW_GRID and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Grid" end) then
+		if ui.draw_button(240 - 22, 0, 0, BUTTON_GRID, SHOW_GRID and 15 or 13, 0, 12, function() HOVER_TEXT =
+				"Toggle Grid" end) then
 			SHOW_GRID = not SHOW_GRID
 			cursor.cooldown = 30
 			--trace('clicked toggle grid button')
 		end
 
-		if ui.draw_button(240 - 32, 0, 0, BUTTON_AXIS, SHOW_AXIS and 15 or 13, 0, 12, function() HOVER_TEXT = "Togle Axis" end) then
+		if ui.draw_button(240 - 32, 0, 0, BUTTON_AXIS, SHOW_AXIS and 15 or 13, 0, 12, function() HOVER_TEXT =
+				"Togle Axis" end) then
 			SHOW_AXIS = not SHOW_AXIS
 			cursor.cooldown = 30
 			--trace('clicked toggle axis button')
 		end
 
-		if ui.draw_button(240 - 41, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Debug" end) then
+		if ui.draw_button(240 - 41, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT =
+				"Toggle Debug" end) then
 			SHOW_DEBUG = not SHOW_DEBUG
 			cursor.cooldown = 30
 			--trace('clicked toggle debug button')
 		end
 
-		if ui.draw_button(240 - 48, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Particle Bounds" end) then
+		if ui.draw_button(240 - 48, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT =
+				"Toggle Particle Bounds" end) then
 			SHOW_PARTICLE_BOUNDS = not SHOW_PARTICLE_BOUNDS
 			cursor.cooldown = 30
 			--trace('clicked toggle particle bounds button')
 		end
 
 		if ui.draw_button(2, 0, 0, BUTTON_ADD, 3, 8, 1, function()
-			HOVER_TEXT = "Add new particle"
-		end) then
+				HOVER_TEXT = "Add new particle"
+			end) then
 			cursor.cooldown = 30
 			local new_settings = unpack_particle_settings(DEFAULT_NEW_PARTICLE)
 			table.insert(EMITTER.particle_systems, {
@@ -3689,20 +3701,20 @@ function update_edit_state(dt)
 		end
 
 		if ui.draw_button(25, 0, 0, BUTTON_ARROW_DOWN, 15, 8, 1, function()
-			HOVER_TEXT = "Jump to bottom"
-		end) then
+				HOVER_TEXT = "Jump to bottom"
+			end) then
 			EMITTER_SCROLL_POS = max_scroll_pos
 			--trace('clicked jump to bottom of scroll')
 		end
 
 		if ui.draw_button(35, 0, 0, BUTTON_ARROW_UP, 15, 8, 1, function()
-			HOVER_TEXT = "Jump to top"
-		end) then
+				HOVER_TEXT = "Jump to top"
+			end) then
 			EMITTER_SCROLL_POS = 0
 			--trace('clicked jump to top of scroll')
 		end
 
-		prints(#EMITTER.particle_systems, 12, 1, 8, 2, vec2(1,0), true)
+		prints(#EMITTER.particle_systems, 12, 1, 8, 2, vec2(1, 0), true)
 
 		local widget_height = 9 + (#EMITTER.particle_systems * 12)
 		clip(0, 9, w, widget_height + 2)
@@ -3716,7 +3728,7 @@ function update_edit_state(dt)
 			end
 			local last_y = 9
 			for k, v in ipairs(EMITTER.particle_systems) do
-				draw_emitter_particle_widget(v, vec2(1, last_y + ((k-1) * spacing - EMITTER_SCROLL_POS)), k)
+				draw_emitter_particle_widget(v, vec2(1, last_y + ((k - 1) * spacing - EMITTER_SCROLL_POS)), k)
 			end
 		end
 
@@ -3725,7 +3737,7 @@ function update_edit_state(dt)
 				--CHECK IF HOVER TOP AUTO-SCROLL TAB
 				if AUTO_SCROLL_SHOW_HOVER_BARS then draw_auto_scroll_widget(true, AUTO_SCROLL_WIDGET_HEIGHT) end
 				--rectb(0, 8, grid.x, h, 2)
-				if hovered(cursor, {x = 0, y = 9, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT}) then
+				if hovered(cursor, { x = 0, y = 9, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT }) then
 					was_scrolled = true
 					EMITTER_SCROLL_POS = clamp(EMITTER_SCROLL_POS - AUTO_SCROLL_SPEED, 0, max_scroll_pos)
 				end
@@ -3734,7 +3746,7 @@ function update_edit_state(dt)
 				--CHECK IF HOVER BOTTOM AUTO-SCROLL TAB
 				if AUTO_SCROLL_SHOW_HOVER_BARS then draw_auto_scroll_widget(false, AUTO_SCROLL_WIDGET_HEIGHT) end
 				--rectb(0, 135 - h, grid.x, h, 2)
-				if hovered(cursor, {x = 0, y = 136 - AUTO_SCROLL_WIDGET_HEIGHT, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT}) then
+				if hovered(cursor, { x = 0, y = 136 - AUTO_SCROLL_WIDGET_HEIGHT, w = grid.x - 1, h = AUTO_SCROLL_WIDGET_HEIGHT }) then
 					was_scrolled = true
 					EMITTER_SCROLL_POS = clamp(EMITTER_SCROLL_POS + AUTO_SCROLL_SPEED, 0, max_scroll_pos)
 				end
@@ -3743,7 +3755,6 @@ function update_edit_state(dt)
 
 		clip()
 	elseif EDIT_STATE == 'particle' then
-
 		draw_particle_settings_list(dt)
 
 		--------------------------------------------------------------------
@@ -3756,7 +3767,7 @@ function update_edit_state(dt)
 			EDIT_STATE = 'emitter'
 		end, PARTICLE_NAME_MAX_WIDTH)
 
-		draw_text_buffer(vec2(0, 9), {w = 239 - GRID_WIDTH, h = 10}, {bg = 8, fg = 15})
+		draw_text_buffer(vec2(0, 9), { w = 239 - GRID_WIDTH, h = 10 }, { bg = 8, fg = 15 })
 	elseif EDIT_STATE == 'edit_particle_value' then
 		update_text_buffer(function()
 			if #TEXT_BUFFER > 0 and tonumber(TEXT_BUFFER) then
@@ -3764,17 +3775,17 @@ function update_edit_state(dt)
 			end
 			EDIT_STATE = 'particle'
 		end, PARTICLE_NAME_MAX_WIDTH)
-	
-		draw_text_buffer(vec2(0, 9), {w = 239 - GRID_WIDTH, h = 10}, {bg = 8, fg = 15})
+
+		draw_text_buffer(vec2(0, 9), { w = 239 - GRID_WIDTH, h = 10 }, { bg = 8, fg = 15 })
 	elseif EDIT_STATE == 'edit_emitter_name' then
 		update_text_buffer(function()
-			if #TEXT_BUFFER > 0  then
+			if #TEXT_BUFFER > 0 then
 				EMITTER.name = trim_text(TEXT_BUFFER, EMITTER_NAME_MAX_WIDTH, false, 3)
 			end
 			EDIT_STATE = 'emitter'
 		end, EMITTER_NAME_MAX_WIDTH)
-		
-		draw_text_buffer(vec2(0, 9), {w = 239 - GRID_WIDTH, h = 10}, {bg = 8, fg = 15})
+
+		draw_text_buffer(vec2(0, 9), { w = 239 - GRID_WIDTH, h = 10 }, { bg = 8, fg = 15 })
 	elseif EDIT_STATE == 'select_sprite' then
 		update_sprite_selection(dt)
 	end
@@ -3799,7 +3810,7 @@ function update_edit_state(dt)
 	-- 	new_active_particle(EMITTER_POSITION)
 	-- end
 
---	draw_particles(dt, false, )
+	--	draw_particles(dt, false, )
 
 	--draw_header_overlay()
 	-- if HOVER_TEXT then
@@ -3808,15 +3819,14 @@ function update_edit_state(dt)
 	draw_hover_text()
 end
 
-
 function draw_toggle(x, y, text, val, hover_text, color)
 	color = color or HOVER_TEXT_COLOR
-	local bounds = {x = x, y = y, w = 10 + text_width(text, true) + text_width(tostring(val):upper(), true) + 2, h = 8}
+	local bounds = { x = x, y = y, w = 10 + text_width(text, true) + text_width(tostring(val):upper(), true) + 2, h = 8 }
 	---rectb(bounds, 12)
 	local hov = hovered(cursor, bounds)
 	if hov then
-		if hover_text then HOVER_TEXT = {text = hover_text, color = color} end
-		pal({1, 0, 2, 15, 4, 0})
+		if hover_text then HOVER_TEXT = { text = hover_text, color = color } end
+		pal({ 1, 0, 2, 15, 4, 0 })
 		spr(BUTTON_ARROW_RIGHT_SMALL, x - 8, y - 1, 0, 1, 0, 0)
 		pal()
 	end
@@ -3828,7 +3838,6 @@ function draw_toggle(x, y, text, val, hover_text, color)
 	end
 	return false
 end
-
 
 function draw_settings_menu(dt)
 	cls()
@@ -3846,7 +3855,7 @@ function draw_settings_menu(dt)
 		STATE = LAST_STATE
 	end
 
-	prints("Editor Settings", 120 - text_width("Editor Settings", false)/2, 1, 8, 2, {x = 1, y = 1}, false)
+	prints("Editor Settings", 120 - text_width("Editor Settings", false) / 2, 1, 8, 2, { x = 1, y = 1 }, false)
 
 	local last_y = 18
 	local x = 8
@@ -3909,16 +3918,14 @@ function draw_settings_menu(dt)
 	--printo(vec2(cursor.x, cursor.y), cursor.x + 5, cursor.y + 16, 8, 2, true)
 end
 
-
 function set_emitter_previewOLD()
 	TEMP_EMITTER = deep_copy(EMITTER_PRESET[CURRENT_EMITTER_PREVIEW])
-	TEMP_EMITTER.bounds = {x = 8, y = 8, w = 240 - 16, h = 136 - 18}
+	TEMP_EMITTER.bounds = { x = 8, y = 8, w = 240 - 16, h = 136 - 18 }
 	for k, v in ipairs(TEMP_EMITTER.particle_systems) do
 		v.settings = unpack_particle_settings(v.settings)
-		v.settings.bounds = {x = 8, y = 8, w = 240 - 16, h = 136 - 18}		
+		v.settings.bounds = { x = 8, y = 8, w = 240 - 16, h = 136 - 18 }
 	end
 end
-
 
 function set_emitter_previewOLD2()
 	TEMP_EMITTER = {
@@ -3929,13 +3936,12 @@ function set_emitter_previewOLD2()
 	}
 
 	deep_copy(EMITTER_PRESET[CURRENT_EMITTER_PREVIEW])
-	TEMP_EMITTER.bounds = {x = 8, y = 8, w = 240 - 16, h = 136 - 18}
+	TEMP_EMITTER.bounds = { x = 8, y = 8, w = 240 - 16, h = 136 - 18 }
 	for k, v in ipairs(TEMP_EMITTER.particle_systems) do
 		v.settings = unpack_particle_settings(v.settings)
-		v.settings.bounds = {x = 8, y = 8, w = 240 - 16, h = 136 - 18}
+		v.settings.bounds = { x = 8, y = 8, w = 240 - 16, h = 136 - 18 }
 	end
 end
-
 
 function set_emitter_preview()
 	TEMP_EMITTER = deep_copy(EMITTER_PRESET[CURRENT_EMITTER_PREVIEW])
@@ -3945,7 +3951,7 @@ function set_emitter_preview()
 	for k, v in ipairs(EMITTER_PRESET[CURRENT_EMITTER_PREVIEW].particle_systems) do
 		v.name = v.name
 		v.settings = unpack_particle_settings(v)
-		v.settings.bounds = {x = 8, y = 8, w = 240 - 16, h = 136 - 19}
+		v.settings.bounds = { x = 8, y = 8, w = 240 - 16, h = 136 - 19 }
 		v.particles = {
 			fg = {},
 			bg = {},
@@ -3956,7 +3962,6 @@ function set_emitter_preview()
 	EMITTER_POSITION = vec2(120, 68)
 end
 
-
 function set_emitter_main()
 	EMITTER = deep_copy(EMITTER_PRESET[CURRENT_EMITTER_PREVIEW])
 	EMITTER.particle_systems = {}
@@ -3966,7 +3971,7 @@ function set_emitter_main()
 		v.name = v.name
 		v.settings = unpack_particle_settings(v)
 		v.visibility = v.settings.visibility or true
-		v.settings.bounds = {x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT - 1}
+		v.settings.bounds = { x = grid.x, y = grid.y, w = GRID_WIDTH, h = GRID_HEIGHT - 1 }
 		v.particles = {
 			fg = {},
 			bg = {},
@@ -3974,57 +3979,60 @@ function set_emitter_main()
 		v.kill = false
 		table.insert(EMITTER.particle_systems, v)
 	end
-	EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH/2), grid.y + (GRID_HEIGHT/2))
+	EMITTER_POSITION = vec2(grid.x + (GRID_WIDTH / 2), grid.y + (GRID_HEIGHT / 2))
 end
-
 
 function draw_load_menu(dt)
 	cls()
 	HOVER_TEXT = false
 	update_cursor_state()
-	draw_particle_preview_window_simulation(0, 0, 240, 136, {x = 0, y = 8, w = 240, h = 118}, dt)
+	draw_particle_preview_window_simulation(0, 0, 240, 136, { x = 0, y = 8, w = 240, h = 118 }, dt)
 	local name = EMITTER_PRESET[CURRENT_EMITTER_PREVIEW].name
-	prints(name, 120 - text_width(name, true)/2, 1, 0, 2, {x = 1, y = 0}, true)
+	prints(name, 120 - text_width(name, true) / 2, 1, 0, 2, { x = 1, y = 0 }, true)
 	if ui.draw_button(1, 0, 1, BUTTON_ARROW_RIGHT, 12, 0, 5, function() HOVER_TEXT = "Back to main menu" end) then
 		--trace('clicked back button from load menu')
 		STATE = 'start'
 	end
-	if ui.draw_button(120 - text_width("Load Preset", true)/2 - 12, 136 - 10, 1, BUTTON_ARROW_RIGHT, 15, 0, 5, function() HOVER_TEXT = "Prev" end) and CURRENT_EMITTER_PREVIEW > 1 then
+	if ui.draw_button(120 - text_width("Load Preset", true) / 2 - 12, 136 - 10, 1, BUTTON_ARROW_RIGHT, 15, 0, 5, function() HOVER_TEXT =
+			"Prev" end) and CURRENT_EMITTER_PREVIEW > 1 then
 		CURRENT_EMITTER_PREVIEW = clamp(CURRENT_EMITTER_PREVIEW - 1, 1, #EMITTER_PRESET)
 		set_emitter_preview()
 		--trace('previous preset button')
 	end
-	prints(CURRENT_EMITTER_PREVIEW .. "/" .. #EMITTER_PRESET, 2, 127, 0, 2, {x = 1, y = 0}, true)
-	if ui.draw_button(120 + text_width("Load Preset", true)/2 + 8, 136 - 10, 0, BUTTON_ARROW_RIGHT, 15, 0, 5, function() HOVER_TEXT = "Next" end) and CURRENT_EMITTER_PREVIEW < #EMITTER_PRESET then
+	prints(CURRENT_EMITTER_PREVIEW .. "/" .. #EMITTER_PRESET, 2, 127, 0, 2, { x = 1, y = 0 }, true)
+	if ui.draw_button(120 + text_width("Load Preset", true) / 2 + 8, 136 - 10, 0, BUTTON_ARROW_RIGHT, 15, 0, 5, function() HOVER_TEXT =
+			"Next" end) and CURRENT_EMITTER_PREVIEW < #EMITTER_PRESET then
 		CURRENT_EMITTER_PREVIEW = clamp(CURRENT_EMITTER_PREVIEW + 1, 1, #EMITTER_PRESET)
 		set_emitter_preview()
 		--trace('next preset button')
 	end
-	if ui.draw_text_button(120 - text_width("Load Preset", true)/2, 136 - 10, BUTTON_TEXT, text_width("Load Preset", true) + 4, 8, 12, 0, 5, {text = "Load Preset", x = 2, y = 1, bg = 0, fg = 2, shadow = {x = 1, y = 0}}, false, true) then
+	if ui.draw_text_button(120 - text_width("Load Preset", true) / 2, 136 - 10, BUTTON_TEXT, text_width("Load Preset", true) + 4, 8, 12, 0, 5, { text = "Load Preset", x = 2, y = 1, bg = 0, fg = 2, shadow = { x = 1, y = 0 } }, false, true) then
 		set_emitter_main()
 		STATE = 'edit'
 		--trace("clicked load button")
 	end
-	
+
 	if ui.draw_button(240 - 8, 0, 0, BUTTON_GRID, SHOW_GRID and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Grid" end) then
 		SHOW_GRID = not SHOW_GRID
 		cursor.cooldown = 30
 		--trace('clicked toggle grid button')
 	end
-	
+
 	if ui.draw_button(240 - 18, 0, 0, BUTTON_AXIS, SHOW_AXIS and 15 or 13, 0, 12, function() HOVER_TEXT = "Togle Axis" end) then
 		SHOW_AXIS = not SHOW_AXIS
 		cursor.cooldown = 30
 		--trace('clicked toggle axis button')
 	end
 
-	if ui.draw_button(240 - 27, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Debug" end) then
+	if ui.draw_button(240 - 27, 0, 0, BUTTON_DEBUG, SHOW_DEBUG and 15 or 13, 0, 12, function() HOVER_TEXT =
+			"Toggle Debug" end) then
 		SHOW_DEBUG = not SHOW_DEBUG
 		cursor.cooldown = 30
 		--trace('clicked toggle debug button')
 	end
 
-	if ui.draw_button(240 - 35, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT = "Toggle Particle Bounds" end) then
+	if ui.draw_button(240 - 35, 1, 0, BUTTON_DEBUG_2, SHOW_PARTICLE_BOUNDS and 15 or 13, 0, 12, function() HOVER_TEXT =
+			"Toggle Particle Bounds" end) then
 		SHOW_PARTICLE_BOUNDS = not SHOW_PARTICLE_BOUNDS
 		cursor.cooldown = 30
 		--trace('clicked toggle particle bounds button')
@@ -4035,7 +4043,6 @@ function draw_load_menu(dt)
 	-- end
 	draw_hover_text()
 end
-
 
 function get_wrapped_text_bounding_box(text, size, width, spacing)
 	width = width or HOVER_TEXT_WRAP
@@ -4063,9 +4070,8 @@ function get_wrapped_text_bounding_box(text, size, width, spacing)
 		end
 		return bounding_box, lines
 	end
-	return bounding_box, {text}
+	return bounding_box, { text }
 end
-
 
 function draw_hover_text()
 	if not SHOW_HOVER_TEXT then return end
@@ -4080,7 +4086,7 @@ function draw_hover_text()
 
 	local offset = vec2(cursor.x + 9, cursor.y + 6)
 	local spacing = 7
-	
+
 	local bounds, lines = get_wrapped_text_bounding_box(text, true, HOVER_TEXT_WRAP, spacing)
 	local line_width = tw(lines[1], true)
 	offset.x = clamp(offset.x, 1, 240 - line_width - 5)
@@ -4097,46 +4103,47 @@ function draw_hover_text()
 		rect(offset.x, offset.y + 1, HOVER_TEXT_WRAP + 4, bounds.y + 1, 7)
 	end
 	for k, v in ipairs(lines) do
-		prints(v, offset.x + 2, offset.y + 2 + ((k-1) * spacing), 8, 2, vec2(1,1), true)
+		prints(v, offset.x + 2, offset.y + 2 + ((k - 1) * spacing), 8, 2, vec2(1, 1), true)
 		--trace(k ..': ' .. tostring(v))
 	end
 end
 
-
 function update_sprite_selection()
 	--get hovered sprite in palette
 	cls()
-	local sx, sy = cursor.x//8 * 8, cursor.y//8 * 8
-	local x = clamp(cursor.x//8, 0, 15)
-	local y = clamp(cursor.y//8, 1, 16)
-	local id = (y-1)*16+x
+	local sx, sy = cursor.x // 8 * 8, cursor.y // 8 * 8
+	local x = clamp(cursor.x // 8, 0, 15)
+	local y = clamp(cursor.y // 8, 1, 16)
+	local id = (y - 1) * 16 + x
 	local selection_width = EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite.w
 	local selection_height = EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite.h
 
 	--draw sprite palette
-	rect(0,0,240,8,7)
-	if ui.draw_button(0, 0, 1, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT = "Back" end, {x = 1, y = 0, w = 7, h = 8}) then
+	rect(0, 0, 240, 8, 7)
+	if ui.draw_button(0, 0, 1, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT = "Back" end, { x = 1, y = 0, w = 7, h = 8 }) then
 		cursor.cooldown = 30
 		EDIT_STATE = 'particle'
 		return
 	end
-	if ui.draw_button(64 - text_width("Sprite Page", true)/2 - 10, 0, 1, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT = "Previous Page" end, {x = 1, y = 0, w = 7, h = 8}) then
+	if ui.draw_button(64 - text_width("Sprite Page", true) / 2 - 10, 0, 1, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT =
+			"Previous Page" end, { x = 1, y = 0, w = 7, h = 8 }) then
 		SPRITE_PAGE = 0
 	end
 
-	prints("Sprite Page", 64 - text_width("Sprite Page", true)/2, 1, 0, 2, {x = 1, y = 0}, true)
+	prints("Sprite Page", 64 - text_width("Sprite Page", true) / 2, 1, 0, 2, { x = 1, y = 0 }, true)
 
-	if ui.draw_button(64 + text_width("Sprite Page", true)/2 + 2, 0, 0, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT = "Next Page" end, {x = 1, y = 0, w = 7, h = 8}) then
+	if ui.draw_button(64 + text_width("Sprite Page", true) / 2 + 2, 0, 0, BUTTON_ARROW_RIGHT, 12, 0, 1, function() HOVER_TEXT =
+			"Next Page" end, { x = 1, y = 0, w = 7, h = 8 }) then
 		SPRITE_PAGE = 1
 	end
 	draw_sprite_window(0, 9)
 	rectb(cursor.drag_loc.x * 8, cursor.drag_loc.y * 8 + 1, selection_width * 8, selection_height * 8, 2)
-	prints("Current ID: ", 240 - 88, 1, 0, 2, {x = 1, y = 0}, true)
-	prints(selected_sprite.id or 0, 240 - 47, 1, 0, 12, {x = 1, y = 0}, true)
+	prints("Current ID: ", 240 - 88, 1, 0, 2, { x = 1, y = 0 }, true)
+	prints(selected_sprite.id or 0, 240 - 47, 1, 0, 12, { x = 1, y = 0 }, true)
 
 	--poke(0x3ffb, 291)
 	--draw_sprite_window(0, 8)
-	if hovered(cursor, {x = 0, y = 8, w = 128, h = 128}) then
+	if hovered(cursor, { x = 0, y = 8, w = 128, h = 128 }) then
 		prints("id: " .. id, sx + 14, sy + 2, 13, 2)
 		spr(252, selected_sprite.pos.x, selected_sprite.pos.y, 0, 1, (TICK % 60 > 30 and 0) or 1)
 		spr(291, cursor.x, cursor.y, 0)
@@ -4157,7 +4164,8 @@ function update_sprite_selection()
 
 			selection.w = selection_width
 			selection.h = selection_height
-			EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite = {id = selected_sprite.id, w = selection_width, h = selection_height}
+			EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite = { id = selected_sprite.id, w = selection_width, h =
+			selection_height }
 		end
 
 
@@ -4171,7 +4179,7 @@ function update_sprite_selection()
 			for sel_y = 1, selection_height do
 				selection[sel_y] = {}
 				for sel_x = 1, selection_width do
-					selection[sel_y][sel_x] = {id = selected_sprite.id + sel_x - 1 + ((sel_y-1)*16), rot = rotation}
+					selection[sel_y][sel_x] = { id = selected_sprite.id + sel_x - 1 + ((sel_y - 1) * 16), rot = rotation }
 				end
 			end
 		end
@@ -4186,18 +4194,18 @@ function update_sprite_selection()
 			selected_sprite.w = selection_width
 			selected_sprite.h = selection_height
 			selected_sprite.pos = vec2(x * 8, y * 8 + 1)
-			EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite = {id = selected_sprite.id, w = selection_width, h = selection_height}
+			EMITTER.particle_systems[CURRENT_PARTICLE].settings.sprite = { id = selected_sprite.id, w = selection_width, h =
+			selection_height }
 		end
 	end
 	--prints("pos: " .. pos.x .. ", " .. pos.y, sx + 10, sy + 14, 13, 12)
 
 
-	prints("W: ", 240 - 33, 1, 0, 2, {x = 1, y = 0}, true)
-	prints(selected_sprite.w or 1, 240 - 26, 1, 0, 12, {x = 1, y = 0}, true)
-	prints("H: ", 240 - 17, 1, 0, 2, {x = 1, y = 0}, true)
-	prints(selected_sprite.h or 1, 240 - 10, 1, 0, 12, {x = 1, y = 0}, true)
+	prints("W: ", 240 - 33, 1, 0, 2, { x = 1, y = 0 }, true)
+	prints(selected_sprite.w or 1, 240 - 26, 1, 0, 12, { x = 1, y = 0 }, true)
+	prints("H: ", 240 - 17, 1, 0, 2, { x = 1, y = 0 }, true)
+	prints(selected_sprite.h or 1, 240 - 10, 1, 0, 12, { x = 1, y = 0 }, true)
 end
-
 
 function TIC()
 	TOTAL_PARTICLES_FG = 0
@@ -4211,7 +4219,7 @@ function TIC()
 		--return
 	elseif STATE == 'settings' then
 		update_cursor_state(dt)
-		
+
 		draw_settings_menu(dt)
 		--return
 	elseif STATE == 'edit' then
@@ -4257,7 +4265,6 @@ function TIC()
 	--rectb(grid.x, grid.y, GRID_WIDTH, GRID_HEIGHT, 15)
 	TICK = TICK + 1
 end
-
 
 -- <TILES>
 -- 166:0000000000000000040000400340043040340300043434040434343000434300
@@ -4430,4 +4437,3 @@ end
 -- 000:1d1d20ba5d1db6892844690c203810185050346d912424441414147530619d557d59300c611c10242c2c5d5d5d999595
 -- 001:1d1d20f9801dfed83d80c71f5e7c16169c9c4c7dca20387d141414c74ebdf38baa8d4820b02e26474f528d8d89d6d6d2
 -- </PALETTE7>
-
